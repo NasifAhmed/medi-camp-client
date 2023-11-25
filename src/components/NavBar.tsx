@@ -1,14 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Menu } from "lucide-react";
 import { Button } from "./ui/button";
 import { ReactNode, useContext } from "react";
 // import { AuthContext } from "../providers/AuthProvider";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { ThemeButton } from "./ThemeButton";
 import { NavBarDropDown } from "./NavBarDropDown";
@@ -76,15 +69,15 @@ const NavBar = () => {
                 </Avatar>
             </div>
             <div className="md:flex justify-between items-center gap-10 hidden">
-                {routes.map((data) => (
-                    <>
+                {routes.map((data, index) => (
+                    <div key={index}>
                         <NavLink
                             to={data.route}
                             className={"transition-colors hover:text-primary"}
                         >
                             {data.name}
                         </NavLink>
-                    </>
+                    </div>
                 ))}
             </div>
             <div className="flex flex-1 ml-auto justify-end items-center gap-1">
