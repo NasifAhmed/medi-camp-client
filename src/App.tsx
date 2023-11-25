@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { useState } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 function App() {
     const [title, setTitle] = useState("Medi Camp");
