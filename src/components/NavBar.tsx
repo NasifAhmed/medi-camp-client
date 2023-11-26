@@ -1,10 +1,10 @@
+import { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
-import { ReactNode, useContext } from "react";
-// import { AuthContext } from "../providers/AuthProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { ThemeButton } from "./ThemeButton";
+import { AuthContext } from "../providers/AuthProvider";
 import { NavBarDropDown } from "./NavBarDropDown";
+import { ThemeButton } from "./ThemeButton";
+import { Button } from "./ui/button";
 // import { useAxios } from "../hooks/useAxios";
 
 type route = {
@@ -15,33 +15,33 @@ type route = {
 const NavBar = () => {
     // [dropDownState, setDropDownState] = useState([]);
 
-    // const { user, logOut, setTokenState, tokenState } = useContext(AuthContext);
+    const { user, logOut } = useContext(AuthContext);
     // const axios = useAxios(true);
     const navigate = useNavigate();
-    // const handleLogOut = () => {
-    //     const userEmail = user.email;
-    //     logOut()
-    //         .then((res) => {
-    //             if (tokenState) {
-    //                 axios
-    //                     .post(
-    //                         "/delete-token",
-    //                         { email: userEmail },
-    //                         { withCredentials: true }
-    //                     )
-    //                     .then((res) => {
-    //                         console.log(
-    //                             `Token delete response ${JSON.stringify(res)}`
-    //                         );
-    //                         setTokenState(false);
-    //                     });
-    //             }
-    //             console.log(res);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
+    const handleLogOut = () => {
+        // const userEmail = user?.email;
+        logOut()
+            //         .then((res) => {
+            //             if (tokenState) {
+            //                 axios
+            //                     .post(
+            //                         "/delete-token",
+            //                         { email: userEmail },
+            //                         { withCredentials: true }
+            //                     )
+            //                     .then((res) => {
+            //                         console.log(
+            //                             `Token delete response ${JSON.stringify(res)}`
+            //                         );
+            //                         setTokenState(false);
+            //                     });
+            //             }
+            //             console.log(res);
+            //         })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     const routes: route[] = [
         {
@@ -81,28 +81,29 @@ const NavBar = () => {
                 ))}
             </div>
             <div className="flex flex-1 ml-auto justify-end items-center gap-1">
-                {
-                    // user ? (
-                    //     <div className="flex text-xs md:text-base items-center">
-                    //         <Avatar className="mr-2">
-                    //             <AvatarImage src={user.photoURL} />
-                    //             <AvatarFallback>
-                    //                 <img
-                    //                     src="https://i.ibb.co/dWbbNfk/fallback.png"
-                    //                     alt=""
-                    //                 />
-                    //             </AvatarFallback>
-                    //         </Avatar>
+                {user ? (
+                    <div className="flex text-xs md:text-base items-center">
+                        <Avatar className="mr-2">
+                            <AvatarImage
+                                src={user.photoURL as string | undefined}
+                            />
+                            <AvatarFallback>
+                                <img
+                                    src="https://i.ibb.co/dWbbNfk/fallback.png"
+                                    alt=""
+                                />
+                            </AvatarFallback>
+                        </Avatar>
 
-                    //         <span className="mr-5">{user.displayName}</span>
-                    //         <Button
-                    //             className="hidden md:block"
-                    //             onClick={handleLogOut}
-                    //         >
-                    //             Log Out
-                    //         </Button>
-                    //     </div>
-                    // ) :
+                        <span className="mr-5">{user.displayName}</span>
+                        <Button
+                            className="hidden md:block"
+                            onClick={handleLogOut}
+                        >
+                            Log Out
+                        </Button>
+                    </div>
+                ) : (
                     <>
                         <Button
                             className="hidden md:block"
@@ -117,7 +118,7 @@ const NavBar = () => {
                             Register
                         </Button>
                     </>
-                }
+                )}
 
                 <ThemeButton />
                 <NavBarDropDown routes={routes} />

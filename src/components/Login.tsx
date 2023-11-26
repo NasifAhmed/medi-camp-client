@@ -1,8 +1,17 @@
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { useEffect } from "react";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/providers/AuthProvider";
+import { Controller, useForm } from "react-hook-form";
+
+import { toast } from "sonner";
+
+type loginData = {
+    email: string;
+    password: string;
+};
 
 function Login() {
     // Set the title
@@ -12,7 +21,58 @@ function Login() {
         setTitle("Login | Medi Camp");
     }, [setTitle]);
 
+    const locationState = useLocation();
+    const [error, setError] = useState();
+    const {
+        control,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        reset,
+    } = useForm<loginData>();
+
     const navigate = useNavigate();
+
+    const authContext = useContext(AuthContext);
+
+    const submitHandler = async (data: loginData) => {
+        toast.promise(
+            authContext
+                .signIn(data.email, data.password)
+                .then((result) => {
+                    console.log(result.user);
+                    navigate(locationState ? locationState : "/");
+                })
+                .catch((error) => {
+                    setError(error.message);
+                    console.error(error);
+                }),
+            {
+                loading: "Logging in...",
+                success: "Log in successful!",
+                error: "Could not log in.",
+            }
+        );
+    };
+
+    const googleLoginHandler = async () => {
+        toast.promise(
+            authContext
+                .googleSignIn()
+                .then((result) => {
+                    console.log(result.user);
+                    navigate(locationState ? locationState : "/");
+                })
+                .catch((error) => {
+                    setError(error.message);
+                    console.error(error);
+                }),
+            {
+                loading: "Logging in...",
+                success: "Log in successful!",
+                error: "Could not log in.",
+            }
+        );
+    };
 
     return (
         <div className="flex flex-col justify-center items-center gap-4 max-w-xs mx-4 md:mx-auto">
@@ -21,24 +81,50 @@ function Login() {
                 Enter your credentials below to log in
             </p>
             <div className="grid gap-6 w-full">
-                <form className="space-y-4">
+                <form
+                    className="space-y-4"
+                    onSubmit={handleSubmit(submitHandler)}
+                >
                     <div>
                         <Label>Email</Label>
-                        <Input
-                            id="email"
-                            placeholder="name@example.com"
-                            type="email"
-                            autoComplete="email"
+                        <Controller
+                            control={control}
+                            name="email"
+                            defaultValue=""
+                            rules={{
+                                required: "Email is required",
+                            }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    id="email"
+                                    placeholder="name@example.com"
+                                    type="email"
+                                    autoComplete="email"
+                                />
+                            )}
                         />
                     </div>
                     <div>
                         <Label>Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            placeholder="password"
+                        <Controller
+                            control={control}
+                            name="password"
+                            defaultValue=""
+                            rules={{
+                                required: "Password is mandatory",
+                            }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    id="password"
+                                    type="password"
+                                    placeholder="password"
+                                />
+                            )}
                         />
                     </div>
+                    {error && <span className="text-destructive">{error}</span>}
                     <Button type="button" className="w-full">
                         Log In
                     </Button>
@@ -63,7 +149,11 @@ function Login() {
                         </span>
                     </div>
                 </div>
-                <Button variant="outline" type="button">
+                <Button
+                    variant="outline"
+                    type="button"
+                    onClick={googleLoginHandler}
+                >
                     Google
                 </Button>
             </div>
