@@ -13,18 +13,18 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <AuthProvider>
-            <HelmetProvider>
-                <ThemeProvider
-                    defaultTheme="light"
-                    storageKey="medicamp-ui-theme"
-                >
-                    <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <HelmetProvider>
+                    <ThemeProvider
+                        defaultTheme="light"
+                        storageKey="medicamp-ui-theme"
+                    >
                         <ReactQueryDevtools />
                         <RouterProvider router={Router} />
-                    </QueryClientProvider>
-                </ThemeProvider>
-            </HelmetProvider>
-        </AuthProvider>
+                    </ThemeProvider>
+                </HelmetProvider>
+            </AuthProvider>
+        </QueryClientProvider>
     </React.StrictMode>
 );
