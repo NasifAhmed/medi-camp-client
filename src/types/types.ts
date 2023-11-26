@@ -13,7 +13,7 @@ export type Camp = {
     doctors: Array<string | Doctor>;
     participants: Array<string | Participant>;
     feedbacks: string[];
-    rating: number;
+    rating?: number;
 };
 
 export type UpcomingCamp = {
@@ -25,6 +25,7 @@ export type UpcomingCamp = {
 
 type User = {
     _id: string;
+    role: "organizer" | "participant" | "doctor";
     name: string;
     email: string;
     phone_number: string;
@@ -46,7 +47,7 @@ export type Participant = {
     age: number;
     gender: string;
     address: string;
-    requirments: string;
+    requirments?: string;
     attended_camps: Array<string | Camp>;
     registered_camps: Array<string | Camp>;
 } & User;
