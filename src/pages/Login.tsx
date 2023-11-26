@@ -1,6 +1,6 @@
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Button } from "../components/ui/button";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
 import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
