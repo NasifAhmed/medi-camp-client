@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Toaster } from "sonner";
 
 function App() {
     const [title, setTitle] = useState("Medi Camp");
@@ -14,6 +15,7 @@ function App() {
             </Helmet>
             <NavBar />
             <Outlet context={setTitle} />
+            <Toaster richColors position="bottom-center" />
         </>
     );
 }
