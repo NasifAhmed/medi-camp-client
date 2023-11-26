@@ -11,17 +11,13 @@ import {
     User,
     UserCredential,
 } from "firebase/auth";
-import app from "../config/firebase.config.ts";
+import app from "../config/firebase.config";
 // import { useAxios } from "../hooks/useAxios";
 
 // Types
 type createUser = (email: string, password: string) => Promise<UserCredential>;
 type signIn = (email: string, password: string) => Promise<UserCredential>;
-type updateUser = (
-    user: User,
-    displayName: string,
-    photoURL: string
-) => Promise<void>;
+type updateUser = (user: User, displayName: string) => Promise<void>;
 type authContextValues = {
     user: User | null;
     loading: boolean;
@@ -31,8 +27,18 @@ type authContextValues = {
     updateUser: updateUser;
     googleSignIn: () => Promise<UserCredential>;
 };
+// Default values
+const defaultAuthState: authContextValues = {
+    user: null,
+    loading: false,
+    createUser: () => Promise.reject(),
+    signIn: () => Promise.reject(),
+    logOut: () => Promise.reject(),
+    updateUser: () => Promise.reject(),
+    googleSignIn: () => Promise.reject(),
+};
 
-export const AuthContext = createContext<authContextValues | null>(null);
+export const AuthContext = createContext(defaultAuthState);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
@@ -73,22 +79,25 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         return signInWithPopup(auth, googleProvider);
     };
 
-    const updateUser = (user: User, displayName: string, photoURL: string) => {
+    const updateUser = (user: User, displayName: string) => {
         setLoading(true);
-        return updateProfile(user, { displayName, photoURL });
+        return updateProfile(user, { displayName });
     };
 
-    const authInfo = {
-        user,
-        loading,
-        createUser,
-        signIn,
-        logOut,
-        updateUser,
-        googleSignIn,
-    };
     return (
-        <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+        <AuthContext.Provider
+            value={{
+                user,
+                loading,
+                createUser,
+                signIn,
+                logOut,
+                updateUser,
+                googleSignIn,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
     );
 };
 
