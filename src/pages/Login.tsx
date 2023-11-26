@@ -7,6 +7,8 @@ import { AuthContext } from "@/providers/AuthProvider";
 import { Controller, useForm } from "react-hook-form";
 
 import { toast } from "sonner";
+import { useAxios } from "@/hooks/useAxios";
+import { useMutation } from "@tanstack/react-query";
 
 type loginData = {
     email: string;
@@ -35,6 +37,7 @@ function Login() {
     const authContext = useContext(AuthContext);
 
     const submitHandler = async (data: loginData) => {
+        console.log(`Trying to log in ${data}`);
         toast.promise(
             authContext
                 .signIn(data.email, data.password)
@@ -54,25 +57,27 @@ function Login() {
         );
     };
 
-    const googleLoginHandler = async () => {
-        toast.promise(
-            authContext
-                .googleSignIn()
-                .then((result) => {
-                    console.log(result.user);
-                    navigate(locationState ? locationState : "/");
-                })
-                .catch((error) => {
-                    setError(error.message);
-                    console.error(error);
-                }),
-            {
-                loading: "Logging in...",
-                success: "Log in successful!",
-                error: "Could not log in.",
-            }
-        );
-    };
+    // const axios = useAxios();
+
+    // const googleLoginHandler = async () => {
+    //     toast.promise(
+    //         authContext
+    //             .googleSignIn()
+    //             .then((result) => {
+    //                 console.log(result.user);
+    //                 navigate(locationState ? locationState : "/");
+    //             })
+    //             .catch((error) => {
+    //                 setError(error.message);
+    //                 console.error(error);
+    //             }),
+    //         {
+    //             loading: "Logging in...",
+    //             success: "Log in successful!",
+    //             error: "Could not log in.",
+    //         }
+    //     );
+    // };
 
     return (
         <div className="flex flex-col justify-center items-center gap-4 max-w-xs mx-4 md:mx-auto">
@@ -125,7 +130,7 @@ function Login() {
                         />
                     </div>
                     {error && <span className="text-destructive">{error}</span>}
-                    <Button type="button" className="w-full">
+                    <Button type="submit" className="w-full">
                         Log In
                     </Button>
                 </form>
@@ -133,13 +138,13 @@ function Login() {
                     Don't have an account ?{" "}
                     <span
                         className="underline underline-offset-4 hover:text-primary font-semibold cursor-pointer"
-                        onClick={() => navigate("/register")}
+                        onClick={() => navigate("/signup")}
                     >
-                        register
+                        sign up
                     </span>
                     .
                 </p>
-                <div className="relative">
+                {/* <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t" />
                     </div>
@@ -155,7 +160,7 @@ function Login() {
                     onClick={googleLoginHandler}
                 >
                     Google
-                </Button>
+                </Button> */}
             </div>
         </div>
     );

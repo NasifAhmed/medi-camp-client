@@ -1,6 +1,6 @@
 import App from "@/App";
 import Login from "@/pages/Login";
-import Register from "@/pages/Register";
+import SignUp from "@/pages/SignUp";
 import FormTest from "@/demo/FormTest";
 import Home from "@/pages/Home";
 import { createBrowserRouter } from "react-router-dom";
@@ -19,8 +19,8 @@ const Router = createBrowserRouter([
                 element: <Login />,
             },
             {
-                path: "/register",
-                element: <Register />,
+                path: "/signup",
+                element: <SignUp />,
             },
             {
                 path: "/test-form",

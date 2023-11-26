@@ -35,12 +35,12 @@ type registerUser =
     | Omit<Doctor_input, "password">
     | Omit<Participant_input, "password">;
 
-function Register() {
+function SignUp() {
     // Set the title
     const setTitle: React.Dispatch<React.SetStateAction<string>> =
         useOutletContext();
     useEffect(() => {
-        setTitle("Register | Medi Camp");
+        setTitle("SignUp | Medi Camp");
     }, [setTitle]);
 
     const authContext = useContext(AuthContext);
@@ -124,7 +124,7 @@ function Register() {
 
     return (
         <div className="flex flex-col justify-center items-center gap-4 max-w-xs mx-4 md:mx-auto">
-            <h1 className="text-2xl font-semibold tracking-tight">Register</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Sign Up</h1>
             <p className="text-sm text-muted-foreground">
                 Enter your credentials below to register
             </p>
@@ -436,7 +436,7 @@ function Register() {
                         type="submit"
                         className={`w-full ${isSubmitting && `disabled`}`}
                     >
-                        Register
+                        Sign Up
                     </Button>
                 </form>
                 <p className="px-8 text-center text-sm text-muted-foreground">
@@ -454,4 +454,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default SignUp;

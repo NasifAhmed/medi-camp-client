@@ -113,9 +113,9 @@ const NavBar = () => {
                         </Button>
                         <Button
                             className="hidden md:block"
-                            onClick={() => navigate("/register")}
+                            onClick={() => navigate("/signup")}
                         >
-                            Register
+                            Sign Up
                         </Button>
                     </>
                 )}
