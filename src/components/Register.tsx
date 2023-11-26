@@ -1,15 +1,15 @@
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import {
-    Select,
-    SelectTrigger,
-    SelectValue,
-    SelectContent,
-    SelectItem,
-} from "./ui/select";
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "./ui/select";
 
 type role = "organizer" | "participant" | "doctor" | null;
 
@@ -34,7 +34,10 @@ function Register() {
                 <form className="space-y-4">
                     <div>
                         <Label>Select your desired role :</Label>
-                        <Select value={role} onValueChange={setRole}>
+                        <Select
+                            value={role as string}
+                            onValueChange={(v) => setRole(v as role)}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Your role" />
                             </SelectTrigger>
