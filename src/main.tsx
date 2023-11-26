@@ -7,18 +7,24 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import Router from "./router/Router";
+import AuthProvider from "./providers/AuthProvider";
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <HelmetProvider>
-            <ThemeProvider defaultTheme="light" storageKey="medicamp-ui-theme">
-                <QueryClientProvider client={queryClient}>
-                    <ReactQueryDevtools />
-                    <RouterProvider router={Router} />
-                </QueryClientProvider>
-            </ThemeProvider>
-        </HelmetProvider>
+        <AuthProvider>
+            <HelmetProvider>
+                <ThemeProvider
+                    defaultTheme="light"
+                    storageKey="medicamp-ui-theme"
+                >
+                    <QueryClientProvider client={queryClient}>
+                        <ReactQueryDevtools />
+                        <RouterProvider router={Router} />
+                    </QueryClientProvider>
+                </ThemeProvider>
+            </HelmetProvider>
+        </AuthProvider>
     </React.StrictMode>
 );
