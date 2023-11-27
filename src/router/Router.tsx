@@ -4,6 +4,8 @@ import SignUp from "@/pages/SignUp";
 import FormTest from "@/demo/FormTest";
 import Home from "@/pages/Home";
 import { createBrowserRouter } from "react-router-dom";
+import AvailableCamps from "@/pages/AvailableCamps";
+import Contact from "@/pages/Contact";
 
 const Router = createBrowserRouter([
     {
@@ -25,6 +27,14 @@ const Router = createBrowserRouter([
             {
                 path: "/test-form",
                 element: <FormTest />,
+            },
+            {
+                path: "/available-camps",
+                element: <AvailableCamps />,
+            },
+            {
+                path: "/contact",
+                element: <Contact />,
             },
         ],
     },
