@@ -1,4 +1,4 @@
-import { ChevronRight, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -7,14 +7,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { routes } from "@/router/NavigationRoutes";
 import { useNavigate } from "react-router-dom";
 
-type route = {
-    name: string;
-    route: string;
-};
-
-export function NavBarDropDown({ routes }: { routes: route[] }) {
+export function NavBarDropDown() {
     const navigate = useNavigate();
     return (
         <DropdownMenu>

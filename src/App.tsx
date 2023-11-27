@@ -3,6 +3,7 @@ import NavBar from "./components/NavBar";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Toaster } from "sonner";
+import Footer from "./components/Footer";
 
 function App() {
     const [title, setTitle] = useState("Medi Camp");
@@ -13,8 +14,13 @@ function App() {
                 <title>{title}</title>
                 {/* <link rel="canonical" href="http://mysite.com/example" /> */}
             </Helmet>
-            <NavBar />
-            <Outlet context={setTitle} />
+            <div className="max-w-screen-xl min-h-screen xl:mx-auto md:mx-10 mx-3 flex flex-col">
+                <NavBar />
+                <div className="flex-grow">
+                    <Outlet context={setTitle} />
+                </div>
+                <Footer />
+            </div>
             <Toaster richColors position="bottom-center" />
         </>
     );

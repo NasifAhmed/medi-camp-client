@@ -6,11 +6,7 @@ import { NavBarDropDown } from "./NavBarDropDown";
 import { ThemeButton } from "./ThemeButton";
 import { Button } from "./ui/button";
 // import { useAxios } from "../hooks/useAxios";
-
-type route = {
-    name: string;
-    route: string;
-};
+import { routes } from "@/router/NavigationRoutes";
 
 const NavBar = () => {
     // [dropDownState, setDropDownState] = useState([]);
@@ -43,23 +39,8 @@ const NavBar = () => {
             });
     };
 
-    const routes: route[] = [
-        {
-            name: "Home",
-            route: "/",
-        },
-        {
-            name: "Available Camps",
-            route: "/available-camps",
-        },
-        {
-            name: "About",
-            route: "/about",
-        },
-    ];
-
     return (
-        <nav className="flex justify-between items-center mb-20">
+        <nav className="flex justify-between items-center mb-20 mt-6">
             <div
                 className="flex-1 mr-auto flex-col gap-2"
                 onClick={() => navigate("/")}
@@ -68,12 +49,12 @@ const NavBar = () => {
                     <AvatarImage src="https://i.ibb.co/NmRFDbN/logo.png" />
                 </Avatar>
             </div>
-            <div className="md:flex justify-between items-center gap-10 hidden">
+            <div className="md:flex justify-between items-center gap-10 hidden text-sm font-semibold">
                 {routes.map((data, index) => (
                     <div key={index}>
                         <NavLink
                             to={data.route}
-                            className={"transition-colors hover:text-primary"}
+                            className={"navbar transition-colors"}
                         >
                             {data.name}
                         </NavLink>
@@ -121,7 +102,7 @@ const NavBar = () => {
                 )}
 
                 <ThemeButton />
-                <NavBarDropDown routes={routes} />
+                <NavBarDropDown />
                 {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild className="md:hidden">
                         <Button variant="outline" size="icon">
