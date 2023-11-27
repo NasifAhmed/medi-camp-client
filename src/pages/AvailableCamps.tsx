@@ -11,8 +11,17 @@ import {
 import { Camp } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { useAxios } from "@/hooks/useAxios";
+import { useOutletContext } from "react-router-dom";
+import { useEffect } from "react";
 
 function AvailableCamps() {
+    // Set the title
+    const setTitle: React.Dispatch<React.SetStateAction<string>> =
+        useOutletContext();
+    useEffect(() => {
+        setTitle("Available Camps | Medi Camp");
+    }, [setTitle]);
+
     const axios = useAxios();
 
     const campResponse = useQuery({
