@@ -12,7 +12,7 @@ export type Camp = {
     phone_number: string;
     doctors: Array<string | Doctor>;
     participants: Array<string | Participant>;
-    feedbacks: string[];
+    feedbacks?: string[];
     rating?: number;
 };
 
