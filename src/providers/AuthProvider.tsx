@@ -70,7 +70,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
                 const userMerged = { ...currentUser, ...userDB };
                 // userFirebase.role = userDB?.role;
                 setUser(userMerged as User & userType);
-                console.log(`Current user : ${JSON.stringify(user)}`);
+                // console.log(`Current user : ${JSON.stringify(user)}`);
 
                 setLoading(false);
             }

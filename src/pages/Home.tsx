@@ -9,7 +9,6 @@ function Home() {
         useOutletContext();
     useEffect(() => {
         setTitle("Home | Medi Camp");
-        console.table(user);
     }, [setTitle, user]);
 
     return <div> HOME</div>;
