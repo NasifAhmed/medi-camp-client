@@ -9,29 +9,10 @@ import { toast } from "sonner";
 import { useState } from "react";
 import UpdateCampModal from "@/components/updateCampModal";
 
-function ManageCamps() {
+function ManageRegisteredCamps() {
     const axios = useAxios();
     const queryClient = useQueryClient();
     const [participantCount, setParticipantCount] = useState();
-
-    const deleteRegisteredMutation = useMutation({
-        mutationFn: async (id) => {
-            await axios
-                .delete(`/registered?registered_camp=${id}`)
-                .then((res) => {
-                    console.log(`Camp delete response ${res}`);
-                })
-                .catch((e) => console.log(`Camp delete error : ${e}`));
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["all camps", "manage"],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ["all camps", "manage", "registered"],
-            });
-        },
-    });
 
     const deleteMutation = useMutation({
         mutationFn: async (id) => {
@@ -39,17 +20,21 @@ function ManageCamps() {
                 .delete(`/camp?_id=${id}`)
                 .then((res) => {
                     console.log(`Camp delete response ${res}`);
-                    deleteRegisteredMutation.mutate(id);
                 })
                 .catch((e) => console.log(`Camp delete error : ${e}`));
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["all camps", "manage", "registered"],
+            });
         },
     });
 
     const queryResponse = useQuery({
-        queryKey: ["all camps", "manage"],
+        queryKey: ["all camps", "manage", "registered"],
         queryFn: async (): Promise<Camp[] | null> => {
             try {
-                const res = await axios.get("/camp");
+                const res = await axios.get("/registered");
                 return res.data;
             } catch (error) {
                 console.log(`Error while fetching camp data : ${error}`);
@@ -71,11 +56,11 @@ function ManageCamps() {
 
     const columns: ColumnDef<Camp>[] = [
         {
-            accessorKey: "name",
+            accessorKey: "registered_camp.name",
             header: "Camp Name",
         },
         {
-            accessorKey: "date",
+            accessorKey: "registered_camp.date",
             header: "Date and Time",
             cell: (info) => {
                 return DateTime.fromISO(info.getValue()).toLocaleString(
@@ -84,68 +69,57 @@ function ManageCamps() {
             },
         },
         {
-            accessorKey: "venue",
+            accessorKey: "registered_camp.venue",
             header: "Venue",
         },
         {
-            accessorKey: "fees",
+            accessorKey: "name",
+            header: "Registered by",
+        },
+        {
+            accessorKey: "email",
+            header: "Email",
+        },
+        {
+            accessorKey: "registered_camp.fees",
             header: "Fees",
             cell: (info) => {
                 return `$${info.getValue()}`;
             },
         },
         {
-            accessorKey: "target_audience",
-            header: "Target Audience",
-        },
-        // {
-        //     accessorKey: "special_service",
-        //     header: "Spcialized Service Provided",
-        // },
-        {
-            accessorKey: "doctors",
-            header: "Healthcare Professional in Attendence",
-            cell: (info) => {
-                return info.getValue().length;
-            },
-        },
-        // {
-        //     accessorKey: "desc",
-        //     header: "Description",
-        // },
-        {
-            accessorKey: "confirmation_status",
-            header: "Confirmation Status",
+            accessorKey: "payment_status",
+            header: "Payment Status",
             cell: (info) => {
                 if (info.getValue()) {
-                    return <span>Confirmed</span>;
+                    return <span>Paid</span>;
                 } else {
-                    return <span>Pending</span>;
+                    return <span>Unpaid</span>;
                 }
             },
         },
         {
-            accessorKey: "img",
+            accessorKey: "payment_status",
             header: "Action",
             cell: (info) => {
-                console.log(info.row.original);
-                return <UpdateCampModal campData={info.row.original} />;
-            },
-        },
-        {
-            accessorKey: "img",
-            header: "Action",
-            cell: (info) => {
-                return (
-                    <Button
-                        variant="destructive"
-                        onClick={() =>
-                            deleteHandler(`${info.row.original._id}`)
-                        }
-                    >
-                        Delete
-                    </Button>
-                );
+                if (info.getValue()) {
+                    return (
+                        <Button variant={"destructive"} disabled>
+                            Cancel
+                        </Button>
+                    );
+                } else {
+                    return (
+                        <Button
+                            onClick={() =>
+                                deleteHandler(`${info.row.original._id}`)
+                            }
+                            variant={"destructive"}
+                        >
+                            Cancel
+                        </Button>
+                    );
+                }
             },
         },
     ];
@@ -161,4 +135,4 @@ function ManageCamps() {
     );
 }
 
-export default ManageCamps;
+export default ManageRegisteredCamps;
