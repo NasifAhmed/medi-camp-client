@@ -8,6 +8,7 @@ import "./index.css";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import Router from "./router/Router";
 import AuthProvider from "./providers/AuthProvider";
+import UserProvider from "./providers/UserProvider";
 
 const queryClient = new QueryClient();
 
@@ -15,15 +16,17 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                <HelmetProvider>
-                    <ThemeProvider
-                        defaultTheme="light"
-                        storageKey="medicamp-ui-theme"
-                    >
-                        <ReactQueryDevtools />
-                        <RouterProvider router={Router} />
-                    </ThemeProvider>
-                </HelmetProvider>
+                <UserProvider>
+                    <HelmetProvider>
+                        <ThemeProvider
+                            defaultTheme="light"
+                            storageKey="medicamp-ui-theme"
+                        >
+                            <ReactQueryDevtools />
+                            <RouterProvider router={Router} />
+                        </ThemeProvider>
+                    </HelmetProvider>
+                </UserProvider>
             </AuthProvider>
         </QueryClientProvider>
     </React.StrictMode>
