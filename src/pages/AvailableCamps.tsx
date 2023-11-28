@@ -1,18 +1,20 @@
-import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-
+import { useAxios } from "@/hooks/useAxios";
 import { Camp } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
-import { useAxios } from "@/hooks/useAxios";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { useEffect } from "react";
+import CampCard from "../components/CampCard";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 function AvailableCamps() {
     // Set the title
@@ -29,6 +31,7 @@ function AvailableCamps() {
         queryFn: async (): Promise<Camp[] | null> => {
             try {
                 const res = await axios.get("/camp");
+                setData(res.data);
                 return res.data;
             } catch (error) {
                 console.log(`Error while fetching camp data : ${error}`);
@@ -36,66 +39,75 @@ function AvailableCamps() {
             }
         },
     });
+
+    const [data, setData] = useState(campResponse.data);
+
+    const searchHandler = (typedValue: string) => {
+        const newData = campResponse.data?.filter((d) =>
+            d?.name.toLowerCase().includes(typedValue.toLowerCase())
+        );
+        setData(newData);
+    };
+
+    const sortHandler = (selected: string) => {
+        if (selected === "fees") {
+            const newData = [...campResponse.data].sort(
+                (a, b) => parseInt(a.fees) - parseInt(b.fees)
+            );
+            setData(newData);
+            console.log("category test", newData);
+            console.log("sorted test", data);
+        }
+    };
+
+    const resetHandler = () => {
+        setData(campResponse.data);
+    };
+
     return (
         <div>
-            <div className="camps-display flex flex-col justify-center items-center gap-5 mx-10">
-                {campResponse.data &&
-                    campResponse.data.map((campData: Camp) => {
-                        return (
-                            <Card className="max-w-3xl">
-                                <CardHeader>
-                                    <CardTitle className="text-2xl">
-                                        {campData.name}
-                                    </CardTitle>
-                                    <CardDescription className="text-lg">
-                                        <h3>
-                                            <span className="font-bold text-foreground">
-                                                Date :{" "}
-                                            </span>
-                                            {campData.date}
-                                        </h3>
-                                        <h3>
-                                            <span className="font-bold text-foreground">
-                                                Venue :{" "}
-                                            </span>
-                                            {campData.venue}
-                                        </h3>
-                                        <h3>
-                                            <span className="font-bold text-foreground">
-                                                Target Audience :{" "}
-                                            </span>
-                                            {campData.target_audience}
-                                        </h3>
-                                        <h3>
-                                            <span className="font-bold text-foreground">
-                                                Spcialized Service :{" "}
-                                            </span>
-                                            NO DATA
-                                        </h3>
-                                        <h3>
-                                            <span className="font-bold text-foreground">
-                                                Healthcare Professional in
-                                                Attendance :{" "}
-                                            </span>
-                                            {campData.doctors.length}
-                                        </h3>
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <img
-                                        className="mb-6"
-                                        src={campData.img}
-                                        alt=""
-                                    />
-                                    <p>{campData.desc}</p>
-                                </CardContent>
-                                <CardFooter className="flex justify-between">
-                                    <Button>Details</Button>
-                                    <Button>Join Camp</Button>
-                                </CardFooter>
-                            </Card>
-                        );
+            <div className="flex flex-col lg:flex-row gap-5 justify-between items-center mb-10">
+                <div className="flex flex-col lg:flex-row w-full max-w-sm justify-center items-center gap-2">
+                    <Input
+                        type="search"
+                        placeholder="Search by camp name"
+                        onChange={(e) => searchHandler(e.target.value)}
+                    />
+                    <Button type="submit" onClick={resetHandler}>
+                        Reset
+                    </Button>
+                </div>
+                <div className="flex flex-col lg:flex-row gap-2">
+                    <Label className="text-xl font-semibold">Sort by :</Label>
+                    <Select
+                        onValueChange={(selectedValue) =>
+                            sortHandler(selectedValue)
+                        }
+                        name="sort"
+                    >
+                        <SelectTrigger className="w-60 mr-2">
+                            <SelectValue placeholder="Select One" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="fees">Fees</SelectItem>
+                            <SelectItem value="participant_count">
+                                Participant Count
+                            </SelectItem>
+                            <SelectItem value="date">Date</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Button className="hidden lg:block" onClick={resetHandler}>
+                        Reset
+                    </Button>
+                </div>
+            </div>
+            <Separator className="w-full mb-10" />
+            <div className="camps-display flex flex-col justify-center items-center gap-5 md:mx-10 mx-1">
+                {data &&
+                    data.map((camp: Camp) => {
+                        return <CampCard campData={camp} />;
                     })}
+                S
             </div>
         </div>
     );
