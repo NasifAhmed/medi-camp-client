@@ -170,6 +170,30 @@ function SignUp() {
                         )}
                     </div>
                     <div>
+                        <Label>Name</Label>
+                        <Controller
+                            control={control}
+                            name="name"
+                            defaultValue=""
+                            rules={{
+                                required: "Name is required",
+                            }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    id="name"
+                                    placeholder="Your Name"
+                                    type="text"
+                                />
+                            )}
+                        />
+                        {errors.name && (
+                            <span className="text-destructive">
+                                {errors.name.message}
+                            </span>
+                        )}
+                    </div>
+                    <div>
                         <Label>Email</Label>
                         <Controller
                             control={control}
@@ -240,15 +264,10 @@ function SignUp() {
                             defaultValue=""
                             rules={{
                                 required: "Phone number is required",
-                                minLength: {
-                                    value: 7,
-                                    message:
-                                        "Phone numbers should be at least 7 digits",
-                                },
-                                maxLength: {
-                                    value: 15,
-                                    message:
-                                        "Phone numbers can not be more than 15 digits",
+                                pattern: {
+                                    //Check for general address
+                                    value: /^\+?\d[-.\s()]?\d{1,}$/,
+                                    message: "Invalid number",
                                 },
                             }}
                             render={({ field }) => (
