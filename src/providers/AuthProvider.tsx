@@ -16,8 +16,6 @@ import { useAxios } from "@/hooks/useAxios";
 // import { useAxios } from "../hooks/useAxios";
 
 // Types
-import { Organizer, Participant, Doctor } from "@/types/types";
-type userType = Organizer | Participant | Doctor;
 type createUser = (email: string, password: string) => Promise<UserCredential>;
 type signIn = (email: string, password: string) => Promise<UserCredential>;
 type updateUser = (user: User, displayName: string) => Promise<void>;
@@ -34,7 +32,7 @@ type authContextValues = {
 // Default values
 const defaultAuthState: authContextValues = {
     user: null,
-    loading: false,
+    loading: true,
     createUser: () => Promise.reject(),
     signIn: () => Promise.reject(),
     logOut: () => Promise.reject(),

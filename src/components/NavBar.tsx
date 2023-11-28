@@ -49,7 +49,7 @@ const NavBar = () => {
                     <AvatarImage src="https://i.ibb.co/NmRFDbN/logo.png" />
                 </Avatar>
             </div>
-            <div className="md:flex justify-between items-center gap-10 hidden text-sm font-semibold">
+            <div className="md:flex justify-between items-center gap-10 hidden text-xl font-semibold">
                 {routes.map((data, index) => (
                     <div key={index}>
                         <NavLink

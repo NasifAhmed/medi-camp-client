@@ -2,11 +2,13 @@ import { Button } from "@/components/ui/button";
 import { useAxios } from "@/hooks/useAxios";
 import { Camp } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { Doctor } from "@/types/types";
 import { DateTime } from "luxon";
 import { Separator } from "@/components/ui/separator";
+import JoinCampModal from "@/components/JoinCampModal";
+import { UserContext } from "@/providers/UserProvider";
 
 function CampDetails() {
     // Set the title
@@ -18,6 +20,8 @@ function CampDetails() {
 
     const { id } = useParams();
     const axios = useAxios();
+
+    const { userFromDB } = useContext(UserContext);
 
     const campQuery = useQuery({
         queryKey: ["camp", id],
@@ -31,13 +35,28 @@ function CampDetails() {
             }
         },
     });
+    const registeredQuery = useQuery({
+        queryKey: ["registeredParticipants", "for Camp Details", id],
+        queryFn: async (): Promise<Camp[] | null> => {
+            try {
+                const response = await axios.get(
+                    `/registered?registered_camp=${id}`
+                );
+                return response.data;
+            } catch (error) {
+                console.log(`Error getting camp data : ${error}`);
+                return null;
+            }
+        },
+    });
 
     return (
         <>
             {campQuery.isLoading ? (
                 <div>LOADING</div>
             ) : (
-                campQuery.data && (
+                campQuery.data &&
+                registeredQuery.data && (
                     <>
                         <div className="flex flex-col space-y-5 max-w-3xl mx-auto">
                             <h1 className="text-center text-4xl font-bold">
@@ -68,7 +87,7 @@ function CampDetails() {
                                 <span className="font-bold">
                                     Participants :{" "}
                                 </span>
-                                {campQuery.data[0].participants?.length}
+                                {registeredQuery.data.length}
                             </h2>
                             <h2 className="text-lg">
                                 <span className="font-bold">Purpose : </span>
@@ -110,8 +129,10 @@ function CampDetails() {
                         </div>
                         <Separator className="w-full mt-10" />
                         <div className="flex justify-around mt-10">
-                            <Button variant={"default"}>Join Camp</Button>
-                            <Button variant={"outline"}>Another One</Button>
+                            {userFromDB?.role === "participant" && (
+                                <JoinCampModal campId={campQuery.data[0]._id} />
+                            )}
+                            {/* <Button variant={"outline"}>Another One</Button> */}
                         </div>
                     </>
                 )

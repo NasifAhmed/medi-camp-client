@@ -5,11 +5,12 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useAxios } from "@/hooks/useAxios";
+import { UserContext } from "@/providers/UserProvider";
 import { Camp } from "@/types/types";
 import { imgBBupload } from "@/utils/imgBBupload";
 import { DevTool } from "@hookform/devtools";
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
@@ -22,6 +23,7 @@ function AddCamp() {
         setTitle("Add Camp | Medi Camp");
     }, [setTitle]);
 
+    const { userFromDB } = useContext(UserContext);
     //Date state for the DateTimePicker component
     const [date, setDate] = useState<Date>(new Date());
 
@@ -56,6 +58,7 @@ function AddCamp() {
                     const camp: Camp = {
                         name: data.name,
                         fees: data.fees,
+                        created_by: userFromDB._id,
                         img: res.data.data.url,
                         date: date.toISOString(),
                         venue: data.venue,

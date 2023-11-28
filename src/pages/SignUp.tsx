@@ -265,8 +265,8 @@ function SignUp() {
                             rules={{
                                 required: "Phone number is required",
                                 pattern: {
-                                    //Check for general address
-                                    value: /^\+?\d[-.\s()]?\d{1,}$/,
+                                    //Check for general phone numbers
+                                    value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
                                     message: "Invalid number",
                                 },
                             }}
@@ -378,25 +378,6 @@ function SignUp() {
                                     </span>
                                 )}
                             </div>
-                            <div>
-                                <Label>Any special requirments you need</Label>
-                                <Controller
-                                    control={control}
-                                    name="requirments"
-                                    defaultValue=""
-                                    rules={{
-                                        required: false,
-                                    }}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            id="requirments"
-                                            type="text"
-                                            placeholder="Describe your requirments in short"
-                                        />
-                                    )}
-                                />
-                            </div>
                         </>
                     )}
                     {watch("role") === "doctor" && (
@@ -419,9 +400,9 @@ function SignUp() {
                                         />
                                     )}
                                 />
-                                {errors.requirments && (
+                                {errors.speciality && (
                                     <span className="text-destructive">
-                                        {errors.requirments.message}
+                                        {errors.speciality.message}
                                     </span>
                                 )}
                             </div>

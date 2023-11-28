@@ -57,6 +57,14 @@ function AvailableCamps() {
             setData(newData);
             console.log("category test", newData);
             console.log("sorted test", data);
+        } else if (selected === "date") {
+            const newData = [...campResponse.data].sort(
+                (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
+            setData(newData);
+            console.log("category test", newData);
+            console.log("sorted test", data);
         }
     };
 
@@ -90,9 +98,6 @@ function AvailableCamps() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="fees">Fees</SelectItem>
-                            <SelectItem value="participant_count">
-                                Participant Count
-                            </SelectItem>
                             <SelectItem value="date">Date</SelectItem>
                         </SelectContent>
                     </Select>
