@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ManageCamps from "./ManageCamps";
+import ManageRegisteredCamps from "./ManageRegisteredCamps";
 
 function DashBoard() {
     return (
@@ -15,8 +16,8 @@ function DashBoard() {
                 <TabsList>
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="manage">Manage Camps</TabsTrigger>
-                    <TabsTrigger value="reports" disabled>
-                        Reports
+                    <TabsTrigger value="manage_registered">
+                        Manage Registered Camps
                     </TabsTrigger>
                     <TabsTrigger value="notifications" disabled>
                         Notifications
@@ -162,6 +163,9 @@ function DashBoard() {
                 </TabsContent>
                 <TabsContent value="manage">
                     <ManageCamps />
+                </TabsContent>
+                <TabsContent value="manage_registered">
+                    <ManageRegisteredCamps />
                 </TabsContent>
             </Tabs>
         </div>
