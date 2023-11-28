@@ -6,6 +6,9 @@ import Home from "@/pages/Home";
 import { createBrowserRouter } from "react-router-dom";
 import AvailableCamps from "@/pages/AvailableCamps";
 import Contact from "@/pages/Contact";
+import CampDetails from "@/pages/CampDetails";
+import AddCamp from "@/pages/AddCamp";
+import DateTimeTest from "@/components/ui/DateTimeTest";
 
 const Router = createBrowserRouter([
     {
@@ -29,12 +32,24 @@ const Router = createBrowserRouter([
                 element: <FormTest />,
             },
             {
+                path: "/test-date",
+                element: <DateTimeTest />,
+            },
+            {
                 path: "/available-camps",
                 element: <AvailableCamps />,
             },
             {
+                path: "/camp-details/:id",
+                element: <CampDetails />,
+            },
+            {
                 path: "/contact",
                 element: <Contact />,
+            },
+            {
+                path: "/add-a-camp",
+                element: <AddCamp />,
             },
         ],
     },
