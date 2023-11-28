@@ -6,27 +6,27 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Camp } from "@/types/types";
-import { Button } from "./ui/button";
-import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import { DateTime } from "luxon";
 import { UserContext } from "@/providers/UserProvider";
+import { Camp } from "@/types/types";
+import { DateTime } from "luxon";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 type prop = {
     campData: Camp;
 };
 
-function CampCard({ campData }: prop) {
+function CampCardSmall({ campData }: prop) {
     const navigate = useNavigate();
-    const { userFromDB } = useContext(UserContext);
 
-    useEffect(() => {
-        console.log(campData._id);
-    }, []);
+    const { userFromDB } = useContext(UserContext);
+    // useEffect(() => {
+    //     console.log(campData._id);
+    // }, []);
 
     return (
-        <Card className="max-w-4xl w-full">
+        <Card className="max-w-md w-full">
             <CardHeader>
                 <CardTitle className="text-2xl">{campData.name}</CardTitle>
                 <CardDescription className="text-lg">
@@ -64,7 +64,7 @@ function CampCard({ campData }: prop) {
                         <span className="font-bold text-foreground">
                             Healthcare Professional in Attendance :{" "}
                         </span>
-                        {campData.doctors.length}
+                        {campData.doctors?.length}
                     </h3>
                 </CardDescription>
             </CardHeader>
@@ -76,7 +76,6 @@ function CampCard({ campData }: prop) {
                         alt=""
                     />
                 </div>
-                <p>{campData.desc}</p>
             </CardContent>
             <CardFooter className="flex justify-between">
                 <Button
@@ -92,4 +91,4 @@ function CampCard({ campData }: prop) {
     );
 }
 
-export default CampCard;
+export default CampCardSmall;
