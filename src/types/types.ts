@@ -6,6 +6,7 @@ export type Camp = {
     venue: string;
     desc: string;
     fees: string;
+    created_by: string;
     purpose?: string;
     benefits?: string;
     target_audience: string;
@@ -24,12 +25,13 @@ export type UpcomingCamp = {
     participants_accepted: Array<string | Doctor>;
 } & Omit<Camp, "doctors" | "participants" | "feedbacks" | "rating">;
 
-type User = {
+export type User = {
     _id: string;
     role: "organizer" | "participant" | "doctor";
     name: string;
     email: string;
     phone_number: string;
+    info: any;
 };
 
 export type Organizer = {
@@ -48,7 +50,17 @@ export type Participant = {
     age: number;
     gender: string;
     address: string;
-    requirments?: string;
     attended_camps: Array<string | Camp>;
     registered_camps: Array<string | Camp>;
+} & User;
+
+export type RegisteredParticipant = {
+    emergency_phone_number: string;
+    age: number;
+    gender: string;
+    address: string;
+    requirments?: string;
+    registered_camp: Camp | string;
+    payment_status: boolean;
+    feedback?: string;
 } & User;
