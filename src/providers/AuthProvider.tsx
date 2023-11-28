@@ -13,7 +13,6 @@ import {
 } from "firebase/auth";
 import app from "../config/firebase.config";
 import { useAxios } from "@/hooks/useAxios";
-import { useQuery } from "@tanstack/react-query";
 // import { useAxios } from "../hooks/useAxios";
 
 // Types
@@ -49,36 +48,22 @@ const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | (User & userType) | null>(null);
-    const [userDB, setUserDB] = useState<userType | null>(null);
     const [loading, setLoading] = useState(true);
     const axios = useAxios();
-    const userDBresponse = useQuery({
-        queryKey: ["user", user?.email],
-        queryFn: async (): Promise<userType[]> => {
-            const response = await axios.get(`/user?email=${user?.email}`);
-            console.log(`User from DB : ${JSON.stringify(response.data)}`);
-            setUserDB(response.data[0]);
-            return response.data;
-        },
-    });
+
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(
             auth,
             (currentUser: User | null) => {
+                setUser(currentUser);
                 console.log("user in the auth state changed", currentUser);
-                // Merging both firebase and DB user data
-                const userMerged = { ...currentUser, ...userDB };
-                // userFirebase.role = userDB?.role;
-                setUser(userMerged as User & userType);
-                // console.log(`Current user : ${JSON.stringify(user)}`);
-
                 setLoading(false);
             }
         );
         return () => {
             unSubscribe();
         };
-    }, [userDB]);
+    }, []);
 
     const createUser = (email: string, password: string) => {
         setLoading(true);
@@ -91,7 +76,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const logOut = () => {
-        setUser(null);
         setLoading(true);
         return signOut(auth);
     };
