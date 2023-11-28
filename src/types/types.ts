@@ -1,17 +1,18 @@
 export type Camp = {
-    _id: string;
+    _id?: string;
     name: string;
     img: string;
     date: string;
     venue: string;
     desc: string;
     fees: string;
-    purpose: string;
-    benefits: string;
+    purpose?: string;
+    benefits?: string;
     target_audience: string;
+    special_service: string;
     phone_number: string;
-    doctors: Array<string | Doctor>;
-    participants: Array<string | Participant>;
+    doctors?: Array<string | Doctor>;
+    participants?: Array<string | Participant>;
     feedbacks?: string[];
     rating?: number;
 };
