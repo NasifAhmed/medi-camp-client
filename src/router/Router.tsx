@@ -9,6 +9,10 @@ import Contact from "@/pages/Contact";
 import CampDetails from "@/pages/CampDetails";
 import AddCamp from "@/pages/AddCamp";
 import DateTimeTest from "@/components/ui/DateTimeTest";
+import RegisteredCamps from "@/pages/RegisteredCamps";
+import ManageCamps from "@/pages/ManageCamps";
+import DashBoard from "@/pages/DashBoard";
+import OrganizerProfile from "@/pages/OrganizerProfile";
 
 const Router = createBrowserRouter([
     {
@@ -50,6 +54,22 @@ const Router = createBrowserRouter([
             {
                 path: "/add-a-camp",
                 element: <AddCamp />,
+            },
+            {
+                path: "/registered-camps",
+                element: <RegisteredCamps />,
+            },
+            {
+                path: "/manage-camps",
+                element: <ManageCamps />,
+            },
+            {
+                path: "/dashboard",
+                element: <DashBoard />,
+            },
+            {
+                path: "/organizer-profile",
+                element: <OrganizerProfile />,
             },
         ],
     },
