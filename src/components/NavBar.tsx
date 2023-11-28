@@ -76,7 +76,9 @@ const NavBar = () => {
                             </AvatarFallback>
                         </Avatar>
 
-                        <span className="mr-5">{user.displayName}</span>
+                        <span className="mr-5 hidden md:block">
+                            {user.displayName}
+                        </span>
                         <Button
                             className="hidden md:block"
                             onClick={handleLogOut}
