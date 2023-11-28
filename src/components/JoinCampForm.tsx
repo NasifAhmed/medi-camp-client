@@ -43,16 +43,13 @@ function JoinCampForm({ campId }: { campId: string }) {
             queryClient.invalidateQueries({
                 queryKey: ["camp"],
             });
-            queryClient.invalidateQueries({
-                queryKey: ["camp", campId],
-            });
         },
     });
 
     const submitHandler = async (data: RegisteredParticipant) => {
         const registeredUser = {
-            name: userFromDB.name,
-            email: userFromDB.email,
+            name: userFromDB?.name,
+            email: userFromDB?.email,
             emergency_phone_number: data.emergency_phone_number,
             age: userFromDB.age,
             gender: userFromDB.gender,
