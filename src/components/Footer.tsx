@@ -8,8 +8,8 @@ function Footer() {
     const navigate = useNavigate();
 
     return (
-        <div className="bg-secondary w-full  mt-20">
-            <div className="h-44 flex">
+        <div className="bg-secondary w-full mt-20 flex flex-col">
+            <div className="md:h-44 flex flex-col md:flex-row">
                 <div className="flex-grow p-14">
                     <div
                         className="flex-1 mr-auto flex-col gap-2 h-10"
