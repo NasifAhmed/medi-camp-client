@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import AnimationWrapper from "@/components/AnimationWrapper";
+import Spinner from "@/components/Spinner";
 
 function AvailableCamps() {
     // Set the title
@@ -113,6 +114,7 @@ function AvailableCamps() {
             </div>
             <Separator className="w-full mb-10" />
             <div className="camps-display flex flex-col justify-center items-center gap-5 md:mx-10 mx-1">
+                <Spinner condition={campResponse.isLoading} />
                 {data &&
                     data.map((camp: Camp) => {
                         return <CampCard campData={camp} />;

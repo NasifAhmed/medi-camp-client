@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { DateTime } from "luxon";
 import { UserContext } from "@/providers/UserProvider";
+import AnimationWrapper from "./AnimationWrapper";
 
 type prop = {
     campData: Camp;
@@ -26,66 +27,70 @@ function CampCard({ campData }: prop) {
     }, []);
 
     return (
-        <Card className="max-w-4xl w-full">
-            <CardHeader>
-                <CardTitle className="text-2xl">{campData.name}</CardTitle>
-                <CardDescription className="text-lg">
-                    <h3>
-                        <span className="font-bold text-foreground">
-                            Date & Time :{" "}
-                        </span>
-                        {DateTime.fromISO(campData.date).toHTTP()}
-                    </h3>
-                    <h3>
-                        <span className="font-bold text-foreground">
-                            Venue :{" "}
-                        </span>
-                        {campData.venue}
-                    </h3>
-                    <h3>
-                        <span className="font-bold text-foreground">
-                            Target Audience :{" "}
-                        </span>
-                        {campData.target_audience}
-                    </h3>
-                    <h3>
-                        <span className="font-bold text-foreground">
-                            Fees :{" "}
-                        </span>
-                        ${campData.fees}
-                    </h3>
-                    <h3>
-                        <span className="font-bold text-foreground">
-                            Spcialized Service :{" "}
-                        </span>
-                        {campData.special_service}
-                    </h3>
-                    <h3>
-                        <span className="font-bold text-foreground">
-                            Healthcare Professional in Attendance :{" "}
-                        </span>
-                        {campData.doctors.length}
-                    </h3>
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className=" max-h-80 mb-6 overflow-hidden">
-                    <img
-                        className="w-full object-cover object-center"
-                        src={campData.img}
-                        alt=""
-                    />
-                </div>
-                <p>{campData.desc}</p>
-            </CardContent>
-            <CardFooter className="justify-center">
-                <Button
-                    onClick={() => navigate(`/camp-details/${campData._id}`)}
-                >
-                    Details
-                </Button>
-            </CardFooter>
-        </Card>
+        <AnimationWrapper>
+            <Card className="max-w-4xl w-full">
+                <CardHeader>
+                    <CardTitle className="text-2xl">{campData.name}</CardTitle>
+                    <CardDescription className="text-lg">
+                        <h3>
+                            <span className="font-bold text-foreground">
+                                Date & Time :{" "}
+                            </span>
+                            {DateTime.fromISO(campData.date).toHTTP()}
+                        </h3>
+                        <h3>
+                            <span className="font-bold text-foreground">
+                                Venue :{" "}
+                            </span>
+                            {campData.venue}
+                        </h3>
+                        <h3>
+                            <span className="font-bold text-foreground">
+                                Target Audience :{" "}
+                            </span>
+                            {campData.target_audience}
+                        </h3>
+                        <h3>
+                            <span className="font-bold text-foreground">
+                                Fees :{" "}
+                            </span>
+                            ${campData.fees}
+                        </h3>
+                        <h3>
+                            <span className="font-bold text-foreground">
+                                Spcialized Service :{" "}
+                            </span>
+                            {campData.special_service}
+                        </h3>
+                        <h3>
+                            <span className="font-bold text-foreground">
+                                Healthcare Professional in Attendance :{" "}
+                            </span>
+                            {campData.doctors.length}
+                        </h3>
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className=" max-h-80 mb-6 overflow-hidden">
+                        <img
+                            className="w-full object-cover object-center"
+                            src={campData.img}
+                            alt=""
+                        />
+                    </div>
+                    <p>{campData.desc}</p>
+                </CardContent>
+                <CardFooter className="justify-center">
+                    <Button
+                        onClick={() =>
+                            navigate(`/camp-details/${campData._id}`)
+                        }
+                    >
+                        Details
+                    </Button>
+                </CardFooter>
+            </Card>
+        </AnimationWrapper>
     );
 }
 

@@ -5,11 +5,13 @@ import { Helmet } from "react-helmet-async";
 import { Toaster } from "sonner";
 import Footer from "./components/Footer";
 import { AnimatePresence } from "framer-motion";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
     const [title, setTitle] = useState("Medi Camp");
     return (
         <>
+            <ScrollToTop />
             <Helmet>
                 <meta charSet="utf-8" />
                 <title>{title}</title>

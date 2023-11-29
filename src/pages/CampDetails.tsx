@@ -10,10 +10,9 @@ import { Separator } from "@/components/ui/separator";
 import JoinCampModal from "@/components/JoinCampModal";
 import { UserContext } from "@/providers/UserProvider";
 import AnimationWrapper from "@/components/AnimationWrapper";
-
-type countResult = {
-    count: string;
-};
+import CampDetailsSkeleton from "@/components/CampDetailsSkeleton";
+import ScaleLoader from "react-spinners/ScaleLoader";
+import Spinner from "@/components/Spinner";
 
 function CampDetails() {
     // Set the title
@@ -71,100 +70,94 @@ function CampDetails() {
 
     return (
         <AnimationWrapper>
-            {campQuery.isLoading ? (
-                <div>LOADING</div>
-            ) : (
-                campQuery.data &&
-                registeredQuery.data && (
-                    <>
-                        <div className="flex flex-col space-y-5 max-w-3xl mx-auto">
-                            <h1 className="text-center text-4xl font-bold">
-                                {campQuery.data[0].name}
-                            </h1>
-                            <img src={campQuery.data[0].img} alt="" />
-                            <h2 className="text-lg">
-                                <span className="font-bold">Date & Time: </span>
-                                {DateTime.fromISO(
-                                    campQuery.data[0].date
-                                ).toHTTP()}
-                            </h2>
-                            <h2 className="text-lg">
-                                <span className="font-bold">Venue : </span>
-                                {campQuery.data[0].venue}
-                            </h2>
+            <Spinner
+                condition={campQuery.isLoading || registeredQuery.isLoading}
+            />
+            {campQuery.data && (
+                <>
+                    <div className="flex flex-col space-y-5 max-w-3xl mx-auto">
+                        <h1 className="text-center text-4xl font-bold">
+                            {campQuery.data[0].name}
+                        </h1>
+                        <img src={campQuery.data[0].img} alt="" />
+                        <h2 className="text-lg">
+                            <span className="font-bold">Date & Time: </span>
+                            {DateTime.fromISO(campQuery.data[0].date).toHTTP()}
+                        </h2>
+                        <h2 className="text-lg">
+                            <span className="font-bold">Venue : </span>
+                            {campQuery.data[0].venue}
+                        </h2>
+                        <h2 className="text-lg">
+                            <span className="font-bold">
+                                Target audience :{" "}
+                            </span>
+                            {campQuery.data[0].target_audience}
+                        </h2>
+                        <h2 className="text-lg">
+                            <span className="font-bold">Fees : </span>$
+                            {campQuery.data[0].fees}
+                        </h2>
+                        <h2 className="text-lg">
+                            <span className="font-bold">Participants : </span>
+                            {registeredQuery.data.length}
+                        </h2>
+                        <h2 className="text-lg">
+                            <span className="font-bold">Purpose : </span>
+                            {campQuery.data[0].purpose}
+                        </h2>
+                        <h2 className="text-lg">
+                            <span className="font-bold">Benefits : </span>
+                            {campQuery.data[0].benefits}
+                        </h2>
+                        <Separator className="w-full" />
+                        <p className="text-lg">{campQuery.data[0].desc}</p>
+                        {campQuery.data[0].special_service && (
                             <h2 className="text-lg">
                                 <span className="font-bold">
-                                    Target audience :{" "}
+                                    Specialized Services :{" "}
                                 </span>
-                                {campQuery.data[0].target_audience}
+                                {campQuery.data[0].special_service}
                             </h2>
-                            <h2 className="text-lg">
-                                <span className="font-bold">Fees : </span>$
-                                {campQuery.data[0].fees}
-                            </h2>
-                            <h2 className="text-lg">
-                                <span className="font-bold">
-                                    Participants :{" "}
-                                </span>
-                                {registeredQuery.data.length}
-                            </h2>
-                            <h2 className="text-lg">
-                                <span className="font-bold">Purpose : </span>
-                                {campQuery.data[0].purpose}
-                            </h2>
-                            <h2 className="text-lg">
-                                <span className="font-bold">Benefits : </span>
-                                {campQuery.data[0].benefits}
-                            </h2>
-                            <Separator className="w-full" />
-                            <p className="text-lg">{campQuery.data[0].desc}</p>
-                            {campQuery.data[0].special_service && (
-                                <h2 className="text-lg">
-                                    <span className="font-bold">
-                                        Specialized Services :{" "}
-                                    </span>
-                                    {campQuery.data[0].special_service}
+                        )}
+                        {campQuery.data[0].doctors?.length && (
+                            <>
+                                <h2 className="text-lg font-bold">
+                                    Attended Healthcare Professionals :
                                 </h2>
-                            )}
-                            {campQuery.data[0].doctors?.length && (
+                                <ol className="list-decimal ml-10">
+                                    {campQuery.data[0].doctors.map(
+                                        (doctor: Doctor) => {
+                                            return (
+                                                <li>
+                                                    {doctor.name},{" "}
+                                                    {doctor.certification}
+                                                </li>
+                                            );
+                                        }
+                                    )}
+                                </ol>
+                            </>
+                        )}
+                    </div>
+                    <Separator className="w-full mt-10" />
+                    <div className="flex justify-around mt-10">
+                        {userFromDB?.role === "participant" &&
+                            registeredQuery.data[0] && (
                                 <>
-                                    <h2 className="text-lg font-bold">
-                                        Attended Healthcare Professionals :
-                                    </h2>
-                                    <ol className="list-decimal ml-10">
-                                        {campQuery.data[0].doctors.map(
-                                            (doctor: Doctor) => {
-                                                return (
-                                                    <li>
-                                                        {doctor.name},{" "}
-                                                        {doctor.certification}
-                                                    </li>
-                                                );
-                                            }
-                                        )}
-                                    </ol>
+                                    <Button disabled>Already Joined</Button>
                                 </>
                             )}
-                        </div>
-                        <Separator className="w-full mt-10" />
-                        <div className="flex justify-around mt-10">
-                            {userFromDB?.role === "participant" &&
-                                registeredQuery.data[0] && (
-                                    <>
-                                        <Button disabled>Already Joined</Button>
-                                    </>
-                                )}
-                            {userFromDB?.role === "participant" &&
-                                !registeredQuery.data[0] && (
-                                    <>
-                                        <JoinCampModal
-                                            campId={campQuery.data[0]._id}
-                                        />
-                                    </>
-                                )}
-                        </div>
-                    </>
-                )
+                        {userFromDB?.role === "participant" &&
+                            !registeredQuery.data[0] && (
+                                <>
+                                    <JoinCampModal
+                                        campId={campQuery.data[0]._id}
+                                    />
+                                </>
+                            )}
+                    </div>
+                </>
             )}
         </AnimationWrapper>
     );
