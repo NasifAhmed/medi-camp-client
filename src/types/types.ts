@@ -55,6 +55,9 @@ export type Participant = {
 } & User;
 
 export type RegisteredParticipant = {
+    _id?: string;
+    name: string;
+    email: string;
     emergency_phone_number: string;
     age: number;
     gender: string;
@@ -62,5 +65,5 @@ export type RegisteredParticipant = {
     requirments?: string;
     registered_camp: Camp | string;
     payment_status: boolean;
-    feedback?: string;
-} & User;
+    confirmation_status: boolean;
+};
