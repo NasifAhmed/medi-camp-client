@@ -24,7 +24,7 @@ function UpdateProfileModal() {
                 <DialogHeader>
                     {/* <DialogTitle>Update Profile</DialogTitle> */}
                 </DialogHeader>
-                <UpdateProfileForm />
+                <UpdateProfileForm modalControl={setOpen} />
                 <DialogFooter className="sm:justify-start">
                     <DialogClose asChild>
                         <Button type="button" variant="secondary">

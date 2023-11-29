@@ -40,6 +40,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
             setLoading(false);
             return response.data;
         },
+        enabled: !!authContext.user?.email,
     });
 
     return (

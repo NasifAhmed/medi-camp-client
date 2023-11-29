@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAxios } from "@/hooks/useAxios";
-import { Camp } from "@/types/types";
+import { Camp, RegisteredParticipant } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
@@ -9,6 +9,11 @@ import { DateTime } from "luxon";
 import { Separator } from "@/components/ui/separator";
 import JoinCampModal from "@/components/JoinCampModal";
 import { UserContext } from "@/providers/UserProvider";
+import AnimationWrapper from "@/components/AnimationWrapper";
+
+type countResult = {
+    count: string;
+};
 
 function CampDetails() {
     // Set the title
@@ -36,8 +41,8 @@ function CampDetails() {
         },
     });
     const registeredQuery = useQuery({
-        queryKey: ["registeredParticipants", "for Camp Details", id],
-        queryFn: async (): Promise<Camp[] | null> => {
+        queryKey: ["registeredParticipants", "count", id],
+        queryFn: async (): Promise<RegisteredParticipant[] | null> => {
             try {
                 const response = await axios.get(
                     `/registered?registered_camp=${id}`
@@ -49,9 +54,23 @@ function CampDetails() {
             }
         },
     });
+    const registeredQueryByEmail = useQuery({
+        queryKey: ["registeredParticipants", "count", id],
+        queryFn: async (): Promise<RegisteredParticipant[] | null> => {
+            try {
+                const response = await axios.get(
+                    `/registered?email=${userFromDB?.email}`
+                );
+                return response.data;
+            } catch (error) {
+                console.log(`Error getting camp data : ${error}`);
+                return null;
+            }
+        },
+    });
 
     return (
-        <>
+        <AnimationWrapper>
             {campQuery.isLoading ? (
                 <div>LOADING</div>
             ) : (
@@ -129,15 +148,25 @@ function CampDetails() {
                         </div>
                         <Separator className="w-full mt-10" />
                         <div className="flex justify-around mt-10">
-                            {userFromDB?.role === "participant" && (
-                                <JoinCampModal campId={campQuery.data[0]._id} />
-                            )}
-                            {/* <Button variant={"outline"}>Another One</Button> */}
+                            {userFromDB?.role === "participant" &&
+                                registeredQuery.data[0] && (
+                                    <>
+                                        <Button disabled>Already Joined</Button>
+                                    </>
+                                )}
+                            {userFromDB?.role === "participant" &&
+                                !registeredQuery.data[0] && (
+                                    <>
+                                        <JoinCampModal
+                                            campId={campQuery.data[0]._id}
+                                        />
+                                    </>
+                                )}
                         </div>
                     </>
                 )
             )}
-        </>
+        </AnimationWrapper>
     );
 }
 

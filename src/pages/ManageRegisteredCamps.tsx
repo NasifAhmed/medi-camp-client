@@ -8,6 +8,8 @@ import { DataTable } from "../components/DataTable";
 import { toast } from "sonner";
 import { useState } from "react";
 import UpdateCampModal from "@/components/updateCampModal";
+import ConfirmRegistrationModal from "@/components/ConfirmRegistrationModal";
+import AnimationWrapper from "@/components/AnimationWrapper";
 
 function ManageRegisteredCamps() {
     const axios = useAxios();
@@ -19,9 +21,25 @@ function ManageRegisteredCamps() {
             await axios
                 .delete(`/camp?_id=${id}`)
                 .then((res) => {
-                    console.log(`Camp delete response ${res}`);
+                    console.log(`Camp delete response`, res);
                 })
-                .catch((e) => console.log(`Camp delete error : ${e}`));
+                .catch((e) => console.log(`Camp delete error : `, e));
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["all camps", "manage", "registered"],
+            });
+        },
+    });
+
+    const confirmMutation = useMutation({
+        mutationFn: async (payload) => {
+            await axios
+                .post(`/registered?_id=${payload._id}`, payload)
+                .then((res) => {
+                    console.log(`Registered update response`, res);
+                })
+                .catch((e) => console.log(`Registered update error : `, e));
         },
         onSettled: () => {
             queryClient.invalidateQueries({
@@ -50,6 +68,30 @@ function ManageRegisteredCamps() {
                 loading: "Deleting entry...",
                 success: `Entry deleted !`,
                 error: "Error : Could not delete !",
+            }
+        );
+    };
+
+    const confirmHandler = (oldData: RegisteredParticipant) => {
+        const updatedRegistered: RegisteredParticipant = {
+            ...oldData,
+            // address: oldData.address,
+            // age: oldData.age,
+            // email: oldData.email,
+            // emergency_phone_number: oldData.emergency_phone_number,
+            // gender: oldData.gender,
+            // name: oldData.name,
+            // payment_status: oldData.payment_status,
+            // registered_camp: oldData.registered_camp,
+            // requirments: oldData.requirments,
+            confirmation_status: true,
+        };
+        toast.promise(
+            confirmMutation.mutateAsync(updatedRegistered).then(() => {}),
+            {
+                loading: "Updateing entry...",
+                success: `Entry updated !`,
+                error: "Error : Could not update !",
             }
         );
     };
@@ -99,7 +141,23 @@ function ManageRegisteredCamps() {
             },
         },
         {
-            accessorKey: "payment_status",
+            accessorKey: "confirmation_status",
+            header: "Payment Status",
+            cell: (info) => {
+                if (info.getValue()) {
+                    return <Button disabled>Confirmed</Button>;
+                } else {
+                    return (
+                        <ConfirmRegistrationModal
+                            confirmHandler={() =>
+                                confirmHandler(info.row.original)
+                            }
+                        />
+                    );
+                }
+            },
+        },
+        {
             header: "Action",
             cell: (info) => {
                 if (info.getValue()) {
@@ -125,13 +183,14 @@ function ManageRegisteredCamps() {
     ];
 
     return (
-        <>
+        <AnimationWrapper>
+            {" "}
             {queryResponse.data && !queryResponse.isLoading && (
                 <div className="container mx-auto py-10">
                     <DataTable columns={columns} data={queryResponse.data} />
                 </div>
             )}
-        </>
+        </AnimationWrapper>
     );
 }
 

@@ -78,14 +78,14 @@ function CampCardSmall({ campData }: prop) {
                 </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-                <Button
+                {/* <Button
                     onClick={() => navigate(`/camp-details/${campData._id}`)}
                 >
                     Details
-                </Button>
-                {userFromDB?.role === "participant" && (
+                </Button> */}
+                {/* {userFromDB?.role === "participant" && (
                     <Button>Join Camp</Button>
-                )}
+                )} */}
             </CardFooter>
         </Card>
     );

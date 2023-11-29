@@ -36,7 +36,11 @@ type registerUser =
     | Omit<Doctor_input, "password">
     | Omit<Participant_input, "password">;
 
-function UpdateProfileForm() {
+function UpdateProfileForm({
+    modalControl,
+}: {
+    modalControl: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
     // Set the title
     const setTitle: React.Dispatch<React.SetStateAction<string>> =
         useOutletContext();
@@ -50,13 +54,10 @@ function UpdateProfileForm() {
     const {
         control,
         handleSubmit,
-        watch,
         formState: { errors, isSubmitting },
         reset,
     } = useForm<Inputs>();
 
-    const navigate = useNavigate();
-    const locationState = useLocation();
     const axios = useAxios();
 
     const queryClient = useQueryClient();
@@ -74,32 +75,31 @@ function UpdateProfileForm() {
 
     const submitHandler = async (data: Inputs) => {
         let registeringUser: registerUser;
-        if (data.role === "organizer") {
+        if (userFromDB?.role === "organizer") {
             registeringUser = {
-                role: data.role,
+                role: userFromDB?.role,
                 name: data.name,
                 email: data.email,
                 phone_number: data.phone_number,
             };
-        } else if (data.role === "doctor") {
+        } else if (userFromDB?.role === "doctor") {
             registeringUser = {
-                role: data.role,
+                role: userFromDB?.role,
                 name: data.name,
                 email: data.email,
                 phone_number: data.phone_number,
                 speciality: data.speciality,
                 certification: data.certification,
             };
-        } else if (data.role === "participant") {
+        } else if (userFromDB?.role === "participant") {
             registeringUser = {
-                role: data.role,
+                role: userFromDB?.role,
                 name: data.name,
                 email: data.email,
                 phone_number: data.phone_number,
                 address: data.address,
                 age: data.age,
                 gender: data.gender,
-                requirments: data.requirments,
             };
         }
         toast.promise(userMutation.mutateAsync(registeringUser), {
@@ -108,12 +108,14 @@ function UpdateProfileForm() {
             error: "Error : Could not register !",
         });
 
+        modalControl(false);
+
         console.log(data);
         reset();
     };
 
     return (
-        <div className="flex flex-col justify-center items-center gap-4 max-w-xs mx-4 md:mx-auto">
+        <div className="flex flex-col justify-center items-center gap-4 max-w-lg w-full mx-4 md:mx-auto">
             <h1 className="text-2xl font-semibold tracking-tight">
                 Update Profile
             </h1>
@@ -241,7 +243,7 @@ function UpdateProfileForm() {
                                     </span>
                                 )}
                             </div>
-                            {watch("role") === "participant" && (
+                            {userFromDB.role === "participant" && (
                                 <>
                                     <div>
                                         <Label>Age</Label>
@@ -294,10 +296,12 @@ function UpdateProfileForm() {
                                                     onValueChange={
                                                         field.onChange
                                                     }
-                                                    defaultValue=""
+                                                    defaultValue={
+                                                        userFromDB.info.gender
+                                                    }
                                                 >
                                                     <SelectTrigger>
-                                                        <SelectValue placeholder="Your gender" />
+                                                        <SelectValue />
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value="male">
@@ -344,7 +348,7 @@ function UpdateProfileForm() {
                                     </div>
                                 </>
                             )}
-                            {watch("role") === "doctor" && (
+                            {userFromDB.role === "doctor" && (
                                 <>
                                     <div>
                                         <Label>Medical Speciality</Label>

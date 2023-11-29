@@ -2,6 +2,8 @@ import { useContext, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { AuthContext } from "@/providers/AuthProvider";
 import { UserContext } from "@/providers/UserProvider";
+import { motion } from "framer-motion";
+import AnimationWrapper from "@/components/AnimationWrapper";
 
 function Home() {
     const { user } = useContext(AuthContext);
@@ -14,7 +16,7 @@ function Home() {
         // console.log(userFromDB);
     }, [setTitle, user]);
 
-    return <div> HOME</div>;
+    return <AnimationWrapper> HOME</AnimationWrapper>;
 }
 
 export default Home;

@@ -14,7 +14,13 @@ import { Controller, useForm } from "react-hook-form";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 
-function UpdateCampForm({ campData }: { campData: Camp }) {
+function UpdateCampForm({
+    modalControl,
+    campData,
+}: {
+    modalControl: React.Dispatch<React.SetStateAction<boolean>>;
+    campData: Camp;
+}) {
     // Set the title
     const setTitle: React.Dispatch<React.SetStateAction<string>> =
         useOutletContext();
@@ -88,6 +94,7 @@ function UpdateCampForm({ campData }: { campData: Camp }) {
                 error: "Error : Could not updated !",
             }
         );
+        modalControl(false);
         console.log(data);
         reset();
     };

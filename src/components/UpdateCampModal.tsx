@@ -23,7 +23,7 @@ function UpdateCampModal({ campData }: { campData: Camp }) {
                 <DialogHeader>
                     <DialogTitle>Update Camp</DialogTitle>
                 </DialogHeader>
-                <UpdateCampForm campData={campData} />
+                <UpdateCampForm modalControl={setOpen} campData={campData} />
                 <DialogFooter className="sm:justify-start">
                     <DialogClose asChild>
                         <Button type="button" variant="secondary">

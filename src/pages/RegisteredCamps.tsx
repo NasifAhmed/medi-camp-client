@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { DataTable } from "../components/DataTable";
 import { toast } from "sonner";
+import AnimationWrapper from "@/components/AnimationWrapper";
 
 function RegisteredCamps() {
     const axios = useAxios();
@@ -125,13 +126,14 @@ function RegisteredCamps() {
     ];
 
     return (
-        <>
+        <AnimationWrapper>
+            {" "}
             {queryResponse.data && !queryResponse.isLoading && (
                 <div className="container mx-auto py-10">
                     <DataTable columns={columns} data={queryResponse.data} />
                 </div>
             )}
-        </>
+        </AnimationWrapper>
     );
 }
 

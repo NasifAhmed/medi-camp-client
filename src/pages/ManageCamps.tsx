@@ -1,18 +1,18 @@
 import { Button } from "@/components/ui/button";
+import UpdateCampModal from "@/components/UpdateCampModal";
 import { useAxios } from "@/hooks/useAxios";
-import { Camp, RegisteredParticipant } from "@/types/types";
+import { Camp } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { DataTable } from "../components/DataTable";
-import { toast } from "sonner";
 import { useState } from "react";
-import UpdateCampModal from "@/components/updateCampModal";
+import { toast } from "sonner";
+import { DataTable } from "../components/DataTable";
+import AnimationWrapper from "@/components/AnimationWrapper";
 
 function ManageCamps() {
     const axios = useAxios();
     const queryClient = useQueryClient();
-    const [participantCount, setParticipantCount] = useState();
 
     const deleteRegisteredMutation = useMutation({
         mutationFn: async (id) => {
@@ -125,7 +125,7 @@ function ManageCamps() {
             },
         },
         {
-            accessorKey: "img",
+            id: "Update",
             header: "Action",
             cell: (info) => {
                 console.log(info.row.original);
@@ -133,7 +133,7 @@ function ManageCamps() {
             },
         },
         {
-            accessorKey: "img",
+            id: "Delete",
             header: "Action",
             cell: (info) => {
                 return (
@@ -151,13 +151,14 @@ function ManageCamps() {
     ];
 
     return (
-        <>
+        <AnimationWrapper>
+            {" "}
             {queryResponse.data && !queryResponse.isLoading && (
                 <div className="container mx-auto py-10">
                     <DataTable columns={columns} data={queryResponse.data} />
                 </div>
             )}
-        </>
+        </AnimationWrapper>
     );
 }
 

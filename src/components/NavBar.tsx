@@ -7,6 +7,8 @@ import { ThemeButton } from "./ThemeButton";
 import { Button } from "./ui/button";
 // import { useAxios } from "../hooks/useAxios";
 import { routes } from "@/router/NavigationRoutes";
+import { useAxios } from "@/hooks/useAxios";
+import { useAxiosSecure } from "@/hooks/useAxiosSecure";
 
 const NavBar = () => {
     // [dropDownState, setDropDownState] = useState([]);
@@ -14,9 +16,14 @@ const NavBar = () => {
     const { user, logOut } = useContext(AuthContext);
     // const axios = useAxios(true);
     const navigate = useNavigate();
+    const axios = useAxios();
+    const axiosSecure = useAxiosSecure();
     const handleLogOut = () => {
         // const userEmail = user?.email;
         logOut()
+            .then(() => {
+                axiosSecure.post("/delete-token");
+            })
             //         .then((res) => {
             //             if (tokenState) {
             //                 axios

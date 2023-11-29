@@ -24,7 +24,7 @@ function JoinCampModal({ campId }: { campId: string }) {
                     <DialogTitle>Join</DialogTitle>
                     <DialogDescription>Fill the info to join</DialogDescription>
                 </DialogHeader>
-                <JoinCampForm campId={campId} />
+                <JoinCampForm modalControl={setOpen} campId={campId} />
                 <DialogFooter className="sm:justify-start">
                     <DialogClose asChild>
                         <Button type="button" variant="secondary">

@@ -17,7 +17,7 @@ import { RegisteredParticipant } from "@/types/types";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import AnimationWrapper from "@/components/AnimationWrapper";
 
 type countResult = {
     count: string;
@@ -112,12 +112,8 @@ function DashBoard() {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-        >
+        <AnimationWrapper>
+            {" "}
             <Tabs defaultValue="overview" className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -269,7 +265,7 @@ function DashBoard() {
                     <RegisteredCamps />
                 </TabsContent>
             </Tabs>
-        </motion.div>
+        </AnimationWrapper>
     );
 }
 

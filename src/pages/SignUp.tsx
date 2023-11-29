@@ -1,3 +1,4 @@
+import AnimationWrapper from "@/components/AnimationWrapper";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -123,334 +124,342 @@ function SignUp() {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center gap-4 max-w-xs mx-4 md:mx-auto">
-            <h1 className="text-2xl font-semibold tracking-tight">Sign Up</h1>
-            <p className="text-sm text-muted-foreground">
-                Enter your credentials below to register
-            </p>
-            <div className="grid gap-6 w-full">
-                <form
-                    className="space-y-4"
-                    onSubmit={handleSubmit(submitHandler)}
-                >
-                    <div>
-                        <Label>Select your desired role :</Label>
-                        <Controller
-                            control={control}
-                            name="role"
-                            rules={{
-                                required: "Role is required",
-                            }}
-                            render={({ field }) => (
-                                <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue=""
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Your role" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="organizer">
-                                            Organizer
-                                        </SelectItem>
-                                        <SelectItem value="participant">
-                                            Participant
-                                        </SelectItem>
-                                        <SelectItem value="doctor">
-                                            Healthcare Professional
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            )}
-                        />
-                        {errors.role && (
-                            <span className="text-destructive">
-                                {errors.role.message}
-                            </span>
-                        )}
-                    </div>
-                    <div>
-                        <Label>Name</Label>
-                        <Controller
-                            control={control}
-                            name="name"
-                            defaultValue=""
-                            rules={{
-                                required: "Name is required",
-                            }}
-                            render={({ field }) => (
-                                <Input
-                                    {...field}
-                                    id="name"
-                                    placeholder="Your Name"
-                                    type="text"
-                                />
-                            )}
-                        />
-                        {errors.name && (
-                            <span className="text-destructive">
-                                {errors.name.message}
-                            </span>
-                        )}
-                    </div>
-                    <div>
-                        <Label>Email</Label>
-                        <Controller
-                            control={control}
-                            name="email"
-                            defaultValue=""
-                            rules={{
-                                required: "Email is required",
-                            }}
-                            render={({ field }) => (
-                                <Input
-                                    {...field}
-                                    id="email"
-                                    placeholder="name@example.com"
-                                    type="email"
-                                    autoComplete="email"
-                                />
-                            )}
-                        />
-                        {errors.email && (
-                            <span className="text-destructive">
-                                {errors.email.message}
-                            </span>
-                        )}
-                    </div>
-                    <div>
-                        <Label>Password</Label>
-                        <Controller
-                            control={control}
-                            name="password"
-                            defaultValue=""
-                            rules={{
-                                required: "Password is mandatory",
-                                minLength: {
-                                    value: 6,
-                                    message:
-                                        "Password needs minimum 6 characters",
-                                },
-                                maxLength: {
-                                    value: 25,
-                                    message: "Password too long",
-                                },
-                                pattern: {
-                                    value: /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/,
-                                    message:
-                                        "At lease one special character needed",
-                                },
-                            }}
-                            render={({ field }) => (
-                                <Input
-                                    {...field}
-                                    id="password"
-                                    type="password"
-                                    placeholder="password"
-                                />
-                            )}
-                        />
-                        {errors.password && (
-                            <span className="text-destructive">
-                                {errors.password.message}
-                            </span>
-                        )}
-                    </div>
-                    <div>
-                        <Label>Phone Number</Label>
-                        <Controller
-                            control={control}
-                            name="phone_number"
-                            defaultValue=""
-                            rules={{
-                                required: "Phone number is required",
-                                pattern: {
-                                    //Check for general phone numbers
-                                    value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
-                                    message: "Invalid number",
-                                },
-                            }}
-                            render={({ field }) => (
-                                <Input
-                                    {...field}
-                                    id="phone"
-                                    type="tel"
-                                    placeholder="+880 1XXX NNNNNN"
-                                />
-                            )}
-                        />
-                        {errors.phone_number && (
-                            <span className="text-destructive">
-                                {errors.phone_number.message}
-                            </span>
-                        )}
-                    </div>
-                    {watch("role") === "participant" && (
-                        <>
-                            <div>
-                                <Label>Age</Label>
-                                <Controller
-                                    control={control}
-                                    name="age"
-                                    defaultValue={0}
-                                    rules={{
-                                        required: "Age is required",
-                                        min: {
-                                            value: 5,
-                                            message:
-                                                "Children below 5 are not allowed",
-                                        },
-                                        max: {
-                                            value: 150,
-                                            message: "Invalid age",
-                                        },
-                                    }}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            id="age"
-                                            type="number"
-                                            placeholder="8-150"
-                                        />
-                                    )}
-                                />
-                                {errors.age && (
-                                    <span className="text-destructive">
-                                        {errors.age.message}
-                                    </span>
-                                )}
-                            </div>
-                            <div>
-                                <Label>Select your gender :</Label>
-
-                                <Controller
-                                    control={control}
-                                    name="gender"
-                                    rules={{
-                                        required: "Gender choice is required",
-                                    }}
-                                    render={({ field }) => (
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue=""
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Your gender" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="male">
-                                                    Male
-                                                </SelectItem>
-                                                <SelectItem value="female">
-                                                    Female
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    )}
-                                />
-                                {errors.gender && (
-                                    <span className="text-destructive">
-                                        {errors.gender.message}
-                                    </span>
-                                )}
-                            </div>
-                            <div>
-                                <Label>Address</Label>
-                                <Controller
-                                    control={control}
-                                    name="address"
-                                    defaultValue=""
-                                    rules={{
-                                        required: "Address is required",
-                                    }}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            id="address"
-                                            type="text"
-                                            placeholder="Street, City, State, Country"
-                                        />
-                                    )}
-                                />
-                                {errors.address && (
-                                    <span className="text-destructive">
-                                        {errors.address.message}
-                                    </span>
-                                )}
-                            </div>
-                        </>
-                    )}
-                    {watch("role") === "doctor" && (
-                        <>
-                            <div>
-                                <Label>Medical Speciality</Label>
-                                <Controller
-                                    control={control}
-                                    name="speciality"
-                                    defaultValue=""
-                                    rules={{
-                                        required: "Specialization is required",
-                                    }}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            id="speciality"
-                                            type="text"
-                                            placeholder="Cardiology"
-                                        />
-                                    )}
-                                />
-                                {errors.speciality && (
-                                    <span className="text-destructive">
-                                        {errors.speciality.message}
-                                    </span>
-                                )}
-                            </div>
-                            <div>
-                                <Label>Certifications</Label>
-                                <Controller
-                                    control={control}
-                                    name="certification"
-                                    defaultValue=""
-                                    rules={{
-                                        required: "Certification is required",
-                                    }}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            id="certification"
-                                            type="text"
-                                            placeholder="MD Cardiology"
-                                        />
-                                    )}
-                                />
-                                {errors.certification && (
-                                    <span className="text-destructive">
-                                        {errors.certification.message}
-                                    </span>
-                                )}
-                            </div>
-                        </>
-                    )}
-                    <Button
-                        type="submit"
-                        className={`w-full ${isSubmitting && `disabled`}`}
-                    >
-                        Sign Up
-                    </Button>
-                </form>
-                <p className="px-8 text-center text-sm text-muted-foreground">
-                    Already have an account ?{" "}
-                    <span
-                        className="underline underline-offset-4 hover:text-primary font-semibold cursor-pointer"
-                        onClick={() => navigate("/login")}
-                    >
-                        login
-                    </span>
-                    .
+        <AnimationWrapper>
+            {" "}
+            <div className="flex flex-col justify-center items-center gap-4 max-w-xs mx-4 md:mx-auto">
+                <h1 className="text-2xl font-semibold tracking-tight">
+                    Sign Up
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                    Enter your credentials below to register
                 </p>
+                <div className="grid gap-6 w-full">
+                    <form
+                        className="space-y-4"
+                        onSubmit={handleSubmit(submitHandler)}
+                    >
+                        <div>
+                            <Label>Select your desired role :</Label>
+                            <Controller
+                                control={control}
+                                name="role"
+                                rules={{
+                                    required: "Role is required",
+                                }}
+                                render={({ field }) => (
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue=""
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Your role" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="organizer">
+                                                Organizer
+                                            </SelectItem>
+                                            <SelectItem value="participant">
+                                                Participant
+                                            </SelectItem>
+                                            <SelectItem value="doctor">
+                                                Healthcare Professional
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                            {errors.role && (
+                                <span className="text-destructive">
+                                    {errors.role.message}
+                                </span>
+                            )}
+                        </div>
+                        <div>
+                            <Label>Name</Label>
+                            <Controller
+                                control={control}
+                                name="name"
+                                defaultValue=""
+                                rules={{
+                                    required: "Name is required",
+                                }}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        id="name"
+                                        placeholder="Your Name"
+                                        type="text"
+                                    />
+                                )}
+                            />
+                            {errors.name && (
+                                <span className="text-destructive">
+                                    {errors.name.message}
+                                </span>
+                            )}
+                        </div>
+                        <div>
+                            <Label>Email</Label>
+                            <Controller
+                                control={control}
+                                name="email"
+                                defaultValue=""
+                                rules={{
+                                    required: "Email is required",
+                                }}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        id="email"
+                                        placeholder="name@example.com"
+                                        type="email"
+                                        autoComplete="email"
+                                    />
+                                )}
+                            />
+                            {errors.email && (
+                                <span className="text-destructive">
+                                    {errors.email.message}
+                                </span>
+                            )}
+                        </div>
+                        <div>
+                            <Label>Password</Label>
+                            <Controller
+                                control={control}
+                                name="password"
+                                defaultValue=""
+                                rules={{
+                                    required: "Password is mandatory",
+                                    minLength: {
+                                        value: 6,
+                                        message:
+                                            "Password needs minimum 6 characters",
+                                    },
+                                    maxLength: {
+                                        value: 25,
+                                        message: "Password too long",
+                                    },
+                                    pattern: {
+                                        value: /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/,
+                                        message:
+                                            "At lease one special character needed",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        id="password"
+                                        type="password"
+                                        placeholder="password"
+                                    />
+                                )}
+                            />
+                            {errors.password && (
+                                <span className="text-destructive">
+                                    {errors.password.message}
+                                </span>
+                            )}
+                        </div>
+                        <div>
+                            <Label>Phone Number</Label>
+                            <Controller
+                                control={control}
+                                name="phone_number"
+                                defaultValue=""
+                                rules={{
+                                    required: "Phone number is required",
+                                    pattern: {
+                                        //Check for general phone numbers
+                                        value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+                                        message: "Invalid number",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        id="phone"
+                                        type="tel"
+                                        placeholder="+880 1XXX NNNNNN"
+                                    />
+                                )}
+                            />
+                            {errors.phone_number && (
+                                <span className="text-destructive">
+                                    {errors.phone_number.message}
+                                </span>
+                            )}
+                        </div>
+                        {watch("role") === "participant" && (
+                            <>
+                                <div>
+                                    <Label>Age</Label>
+                                    <Controller
+                                        control={control}
+                                        name="age"
+                                        defaultValue={0}
+                                        rules={{
+                                            required: "Age is required",
+                                            min: {
+                                                value: 5,
+                                                message:
+                                                    "Children below 5 are not allowed",
+                                            },
+                                            max: {
+                                                value: 150,
+                                                message: "Invalid age",
+                                            },
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                id="age"
+                                                type="number"
+                                                placeholder="8-150"
+                                            />
+                                        )}
+                                    />
+                                    {errors.age && (
+                                        <span className="text-destructive">
+                                            {errors.age.message}
+                                        </span>
+                                    )}
+                                </div>
+                                <div>
+                                    <Label>Select your gender :</Label>
+
+                                    <Controller
+                                        control={control}
+                                        name="gender"
+                                        rules={{
+                                            required:
+                                                "Gender choice is required",
+                                        }}
+                                        render={({ field }) => (
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                defaultValue=""
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Your gender" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="male">
+                                                        Male
+                                                    </SelectItem>
+                                                    <SelectItem value="female">
+                                                        Female
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+                                    {errors.gender && (
+                                        <span className="text-destructive">
+                                            {errors.gender.message}
+                                        </span>
+                                    )}
+                                </div>
+                                <div>
+                                    <Label>Address</Label>
+                                    <Controller
+                                        control={control}
+                                        name="address"
+                                        defaultValue=""
+                                        rules={{
+                                            required: "Address is required",
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                id="address"
+                                                type="text"
+                                                placeholder="Street, City, State, Country"
+                                            />
+                                        )}
+                                    />
+                                    {errors.address && (
+                                        <span className="text-destructive">
+                                            {errors.address.message}
+                                        </span>
+                                    )}
+                                </div>
+                            </>
+                        )}
+                        {watch("role") === "doctor" && (
+                            <>
+                                <div>
+                                    <Label>Medical Speciality</Label>
+                                    <Controller
+                                        control={control}
+                                        name="speciality"
+                                        defaultValue=""
+                                        rules={{
+                                            required:
+                                                "Specialization is required",
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                id="speciality"
+                                                type="text"
+                                                placeholder="Cardiology"
+                                            />
+                                        )}
+                                    />
+                                    {errors.speciality && (
+                                        <span className="text-destructive">
+                                            {errors.speciality.message}
+                                        </span>
+                                    )}
+                                </div>
+                                <div>
+                                    <Label>Certifications</Label>
+                                    <Controller
+                                        control={control}
+                                        name="certification"
+                                        defaultValue=""
+                                        rules={{
+                                            required:
+                                                "Certification is required",
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                id="certification"
+                                                type="text"
+                                                placeholder="MD Cardiology"
+                                            />
+                                        )}
+                                    />
+                                    {errors.certification && (
+                                        <span className="text-destructive">
+                                            {errors.certification.message}
+                                        </span>
+                                    )}
+                                </div>
+                            </>
+                        )}
+                        <Button
+                            type="submit"
+                            className={`w-full ${isSubmitting && `disabled`}`}
+                        >
+                            Sign Up
+                        </Button>
+                    </form>
+                    <p className="px-8 text-center text-sm text-muted-foreground">
+                        Already have an account ?{" "}
+                        <span
+                            className="underline underline-offset-4 hover:text-primary font-semibold cursor-pointer"
+                            onClick={() => navigate("/login")}
+                        >
+                            login
+                        </span>
+                        .
+                    </p>
+                </div>
             </div>
-        </div>
+        </AnimationWrapper>
     );
 }
 

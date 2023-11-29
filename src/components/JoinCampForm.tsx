@@ -10,7 +10,13 @@ import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-function JoinCampForm({ campId }: { campId: string }) {
+function JoinCampForm({
+    modalControl,
+    campId,
+}: {
+    modalControl: React.Dispatch<React.SetStateAction<boolean>>;
+    campId: string;
+}) {
     const { userFromDB } = useContext(UserContext);
 
     const {
@@ -51,12 +57,10 @@ function JoinCampForm({ campId }: { campId: string }) {
             name: userFromDB?.name,
             email: userFromDB?.email,
             emergency_phone_number: data.emergency_phone_number,
-            age: userFromDB.age,
-            gender: userFromDB.gender,
-            address: userFromDB.address,
             requirments: data.requirments,
             registered_camp: campId,
             payment_status: false,
+            confirmation_status: false,
         };
 
         toast.promise(
@@ -64,7 +68,7 @@ function JoinCampForm({ campId }: { campId: string }) {
                 .mutateAsync(registeredUser)
                 .then(() => {
                     console.log("Joined successfully");
-                    navigate(locationState ? locationState : "/");
+                    modalControl(false);
                 })
                 .catch((error) => {
                     console.error(error);

@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { motion } from "framer-motion";
+import AnimationWrapper from "@/components/AnimationWrapper";
 
 function AvailableCamps() {
     // Set the title
@@ -73,8 +75,11 @@ function AvailableCamps() {
     };
 
     return (
-        <div>
-            <div className="flex flex-col lg:flex-row gap-5 justify-between items-center mb-10">
+        <AnimationWrapper>
+            <div
+                className="flex flex-col lg:flex-row gap-5 justify-between
+                items-center mb-10"
+            >
                 <div className="flex flex-col lg:flex-row w-full max-w-sm justify-center items-center gap-2">
                     <Input
                         type="search"
@@ -112,9 +117,8 @@ function AvailableCamps() {
                     data.map((camp: Camp) => {
                         return <CampCard campData={camp} />;
                     })}
-                S
             </div>
-        </div>
+        </AnimationWrapper>
     );
 }
 
