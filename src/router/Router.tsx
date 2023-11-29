@@ -13,11 +13,14 @@ import RegisteredCamps from "@/pages/RegisteredCamps";
 import ManageCamps from "@/pages/ManageCamps";
 import DashBoard from "@/pages/DashBoard";
 import OrganizerProfile from "@/pages/OrganizerProfile";
+import ParticipantProfile from "@/pages/ParticipantProfile";
+import NotFound from "@/pages/NotFound";
 
 const Router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
+        errorElement: <NotFound />,
         children: [
             {
                 path: "/",
@@ -70,6 +73,10 @@ const Router = createBrowserRouter([
             {
                 path: "/organizer-profile",
                 element: <OrganizerProfile />,
+            },
+            {
+                path: "/participant-profile",
+                element: <ParticipantProfile />,
             },
         ],
     },
