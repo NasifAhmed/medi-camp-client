@@ -1,11 +1,14 @@
+import { AuthContext } from "@/providers/AuthProvider";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Label } from "./ui/label";
-import { routes } from "@/router/NavigationRoutes";
-import { ReactNode } from "react";
+import logo from "../assets/logo.png";
 
 function Footer() {
     const navigate = useNavigate();
+
+    const { user } = useContext(AuthContext);
 
     return (
         <div className="bg-secondary w-full mt-20 flex flex-col">
@@ -16,25 +19,45 @@ function Footer() {
                         onClick={() => navigate("/")}
                     >
                         <Avatar className="mr-2">
-                            <AvatarImage
-                                className="w-20"
-                                src="https://i.ibb.co/NmRFDbN/logo.png"
-                            />
+                            <AvatarImage className="w-20" src={logo} />
                             <Label className="text-lg">Medi Camp</Label>
                         </Avatar>
                     </div>
                 </div>
                 <div className="flex-grow p-14 flex-col space-y-2">
-                    {routes.map((route, index) => (
-                        <div key={index}>
-                            <NavLink
-                                to={route.route}
-                                className={"footer transition-colors "}
-                            >
-                                {route.name}
-                            </NavLink>
-                        </div>
-                    ))}
+                    <div>
+                        <NavLink to="/" className={"footer transition-colors"}>
+                            Home
+                        </NavLink>
+                    </div>
+                    {user && (
+                        <>
+                            <div>
+                                <NavLink
+                                    to="/available-camps"
+                                    className={"footer transition-colors"}
+                                >
+                                    Available Camps
+                                </NavLink>
+                            </div>
+                            <div>
+                                <NavLink
+                                    to="/dashboard"
+                                    className={"footer transition-colors"}
+                                >
+                                    Dashboard
+                                </NavLink>
+                            </div>
+                        </>
+                    )}
+                    <div>
+                        <NavLink
+                            to="/contact"
+                            className={"footer transition-colors"}
+                        >
+                            Contact Us
+                        </NavLink>
+                    </div>
                 </div>
             </div>
             <div className="pt-5 pb-6">

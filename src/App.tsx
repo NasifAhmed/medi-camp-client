@@ -1,11 +1,12 @@
-import { Outlet } from "react-router-dom";
-import NavBar from "./components/NavBar";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
 import Footer from "./components/Footer";
-import { AnimatePresence } from "framer-motion";
+import NavBar from "./components/NavBar";
 import ScrollToTop from "./components/ScrollToTop";
+// ..
 
 function App() {
     const [title, setTitle] = useState("Medi Camp");

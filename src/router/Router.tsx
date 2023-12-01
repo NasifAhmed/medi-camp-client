@@ -1,20 +1,21 @@
 import App from "@/App";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
-import FormTest from "@/demo/FormTest";
 import Home from "@/pages/Home";
 import { createBrowserRouter } from "react-router-dom";
 import AvailableCamps from "@/pages/AvailableCamps";
 import Contact from "@/pages/Contact";
 import CampDetails from "@/pages/CampDetails";
 import AddCamp from "@/pages/AddCamp";
-import DateTimeTest from "@/components/ui/DateTimeTest";
 import RegisteredCamps from "@/pages/RegisteredCamps";
 import ManageCamps from "@/pages/ManageCamps";
 import DashBoard from "@/pages/DashBoard";
 import OrganizerProfile from "@/pages/OrganizerProfile";
 import ParticipantProfile from "@/pages/ParticipantProfile";
 import NotFound from "@/pages/NotFound";
+import PrivateRoute from "./PrivateRoute";
+import DoctorProfile from "@/pages/DoctorProfile";
+import Unauthorized from "@/pages/Unauthorized";
 
 const Router = createBrowserRouter([
     {
@@ -35,16 +36,12 @@ const Router = createBrowserRouter([
                 element: <SignUp />,
             },
             {
-                path: "/test-form",
-                element: <FormTest />,
-            },
-            {
-                path: "/test-date",
-                element: <DateTimeTest />,
-            },
-            {
                 path: "/available-camps",
-                element: <AvailableCamps />,
+                element: (
+                    <PrivateRoute>
+                        <AvailableCamps />{" "}
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/camp-details/:id",
@@ -56,29 +53,66 @@ const Router = createBrowserRouter([
             },
             {
                 path: "/add-a-camp",
-                element: <AddCamp />,
+                element: (
+                    <PrivateRoute>
+                        <AddCamp />
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/registered-camps",
-                element: <RegisteredCamps />,
+                element: (
+                    <PrivateRoute>
+                        <RegisteredCamps />
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/manage-camps",
-                element: <ManageCamps />,
+                element: (
+                    <PrivateRoute>
+                        <ManageCamps />{" "}
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/dashboard",
-                element: <DashBoard />,
+                element: (
+                    <PrivateRoute>
+                        <DashBoard />
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/organizer-profile",
-                element: <OrganizerProfile />,
+                element: (
+                    <PrivateRoute>
+                        <OrganizerProfile />
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/participant-profile",
-                element: <ParticipantProfile />,
+                element: (
+                    <PrivateRoute>
+                        <ParticipantProfile />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "/doctor-profile",
+                element: (
+                    <PrivateRoute>
+                        <DoctorProfile />
+                    </PrivateRoute>
+                ),
             },
         ],
+    },
+
+    {
+        path: "/unauthorized",
+        element: <Unauthorized />,
     },
 ]);
 

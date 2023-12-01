@@ -6,7 +6,9 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { useAxios } from "@/hooks/useAxios";
 import { Camp } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
@@ -14,14 +16,40 @@ import { Button } from "./ui/button";
 type prop = {
     campData: Camp;
 };
+type countData = {
+    count: string;
+};
 
-function CampCardSmall({ campData }: prop) {
+function HomeCampCard({ campData }: prop) {
     const navigate = useNavigate();
 
-    // const { userFromDB } = useContext(UserContext);
     // useEffect(() => {
     //     console.log(campData._id);
     // }, []);
+
+    const axios = useAxios();
+    const particpantCountQuery = useQuery({
+        queryKey: ["home", "registered", "participant", campData._id],
+        queryFn: async (): Promise<countData | null> => {
+            try {
+                const response = await axios.get(
+                    `/registered?registered_camp=${campData._id}&count=0`
+                );
+                console.log(`Getting camp data for`, campData._id);
+
+                // const fees = response.data.reduce((accum, current) => {
+                //     if (current.payment_status) {
+                //         return accum + current;
+                //     }
+                // });
+                // return fees;
+                return response.data;
+            } catch (error) {
+                console.log(`Error getting registered data : ${error}`);
+                return null;
+            }
+        },
+    });
 
     return (
         <Card data-aos="fade-up" className="max-w-lg w-full">
@@ -63,6 +91,12 @@ function CampCardSmall({ campData }: prop) {
                     </h3>
                     <h3>
                         <span className="font-bold text-foreground">
+                            Participant Count :{" "}
+                        </span>
+                        {particpantCountQuery.data?.count}
+                    </h3>
+                    <h3>
+                        <span className="font-bold text-foreground">
                             Healthcare Professional in Attendance :{" "}
                         </span>
                         {campData.doctors?.length}
@@ -76,7 +110,7 @@ function CampCardSmall({ campData }: prop) {
                     />
                 </div>
             </CardContent>
-            <CardFooter className="flex justify-between">
+            <CardFooter className="flex justify-center">
                 <Button
                     onClick={() => navigate(`/camp-details/${campData._id}`)}
                 >
@@ -90,4 +124,4 @@ function CampCardSmall({ campData }: prop) {
     );
 }
 
-export default CampCardSmall;
+export default HomeCampCard;

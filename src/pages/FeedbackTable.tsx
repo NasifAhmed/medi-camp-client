@@ -1,37 +1,22 @@
-import { Button } from "@/components/ui/button";
+import AnimationWrapper from "@/components/AnimationWrapper";
+import FeedbackModal from "@/components/FeedbackModal";
 import { useAxios } from "@/hooks/useAxios";
 import { RegisteredParticipant } from "@/types/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { DataTable } from "../components/DataTable";
-import { toast } from "sonner";
-import AnimationWrapper from "@/components/AnimationWrapper";
-import CheckoutModal from "@/components/CheckoutModal";
 
-function RegisteredCamps() {
+function FeedbackTable() {
     const axios = useAxios();
-    const queryClient = useQueryClient();
-
-    const deleteMutation = useMutation({
-        mutationFn: async (id: string) => {
-            await axios
-                .delete(`/registered?_id=${id}`)
-                .then((res) => {
-                    console.log(`Registered delete response ${res}`);
-                })
-                .catch((e) => console.log(`Registered delete : ${e}`));
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["registered camps"] });
-        },
-    });
 
     const queryResponse = useQuery({
-        queryKey: ["registered camps"],
+        queryKey: ["registered camps", "feedback"],
         queryFn: async (): Promise<RegisteredParticipant[] | null> => {
             try {
-                const res = await axios.get("/registered");
+                const res = await axios.get(
+                    "/registered?payment_status=true&confirmation_status=true"
+                );
                 return res.data;
             } catch (error) {
                 console.log(
@@ -41,17 +26,6 @@ function RegisteredCamps() {
             }
         },
     });
-
-    const deleteHandler = (id: string) => {
-        toast.promise(
-            deleteMutation.mutateAsync(id).then(() => {}),
-            {
-                loading: "Deleting entry...",
-                success: `Entry deleted !`,
-                error: "Error : Could not delete !",
-            }
-        );
-    };
 
     const columns: ColumnDef<RegisteredParticipant>[] = [
         {
@@ -83,9 +57,9 @@ function RegisteredCamps() {
             header: "Payment Status",
             cell: (info) => {
                 if (info.getValue()) {
-                    return <Button disabled>Paid</Button>;
+                    return <span>Paid</span>;
                 } else {
-                    return <CheckoutModal registerData={info.row.original} />;
+                    return <span>Not Paid</span>;
                 }
             },
         },
@@ -101,26 +75,12 @@ function RegisteredCamps() {
             },
         },
         {
+            id: "Review",
             header: "Action",
-            cell: (info) => {
-                if (info.row.original.payment_status) {
-                    return (
-                        <Button variant={"destructive"} disabled>
-                            Cancel
-                        </Button>
-                    );
-                } else {
-                    return (
-                        <Button
-                            onClick={() =>
-                                deleteHandler(`${info.row.original._id}`)
-                            }
-                            variant={"destructive"}
-                        >
-                            Cancel
-                        </Button>
-                    );
-                }
+            cell: (info: any) => {
+                return (
+                    <FeedbackModal campId={info.row.original.registered_camp} />
+                );
             },
         },
     ];
@@ -137,4 +97,4 @@ function RegisteredCamps() {
     );
 }
 
-export default RegisteredCamps;
+export default FeedbackTable;

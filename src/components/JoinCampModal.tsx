@@ -11,8 +11,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "./ui/dialog";
+import { Camp } from "@/types/types";
 
-function JoinCampModal({ campId }: { campId: string }) {
+function JoinCampModal({ campData }: { campData: Camp }) {
     const [open, setOpen] = useState(false);
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -24,7 +25,7 @@ function JoinCampModal({ campId }: { campId: string }) {
                     <DialogTitle>Join</DialogTitle>
                     <DialogDescription>Fill the info to join</DialogDescription>
                 </DialogHeader>
-                <JoinCampForm modalControl={setOpen} campId={campId} />
+                <JoinCampForm modalControl={setOpen} campData={campData} />
                 <DialogFooter className="sm:justify-start">
                     <DialogClose asChild>
                         <Button type="button" variant="secondary">

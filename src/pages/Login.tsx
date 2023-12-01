@@ -1,16 +1,14 @@
-import { Button } from "../components/ui/button";
-import { Label } from "../components/ui/label";
-import { Input } from "../components/ui/input";
-import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
+import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 
-import { toast } from "sonner";
-import { useAxios } from "@/hooks/useAxios";
-import { useMutation } from "@tanstack/react-query";
-import { useAxiosSecure } from "@/hooks/useAxiosSecure";
 import AnimationWrapper from "@/components/AnimationWrapper";
+import { useAxiosSecure } from "@/hooks/useAxiosSecure";
+import { toast } from "sonner";
 
 type loginData = {
     email: string;
@@ -25,17 +23,11 @@ function Login() {
         setTitle("Login | Medi Camp");
     }, [setTitle]);
 
-    const locationState = useLocation();
+    const locationState = useLocation().state;
     const [error, setError] = useState();
-    const {
-        control,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        reset,
-    } = useForm<loginData>();
+    const { control, handleSubmit } = useForm<loginData>();
 
     const navigate = useNavigate();
-    const axios = useAxios();
     const axiosSecure = useAxiosSecure();
 
     const authContext = useContext(AuthContext);
@@ -49,7 +41,7 @@ function Login() {
                 const jwtUser = { email: result.user.email };
                 await axiosSecure.post("/get-token", jwtUser);
                 toast.success("Log in successful !");
-                navigate(locationState ? locationState : "/");
+                navigate(locationState ? locationState : `/dashboard`);
             })
             .catch((error) => {
                 setError(error.message);

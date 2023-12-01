@@ -10,7 +10,13 @@ import Router from "./router/Router";
 import AuthProvider from "./providers/AuthProvider";
 import UserProvider from "./providers/UserProvider";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>

@@ -1,27 +1,35 @@
 import { useState } from "react";
-import UpdateProfileForm from "./UpdateProfileForm";
+import Stripe from "./Stripe";
 import { Button } from "./ui/button";
 import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
+    DialogTitle,
     DialogTrigger,
 } from "./ui/dialog";
+import { RegisteredParticipant } from "@/types/types";
 
-function UpdateProfileModal() {
+function CheckoutModal({
+    registerData,
+}: {
+    registerData: RegisteredParticipant;
+}) {
     const [open, setOpen] = useState(false);
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="default">Update Profile</Button>
+                <Button variant="default">Pay</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md lg:max-w-screen-lg overflow-y-scroll max-h-screen">
+            <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    {/* <DialogTitle>Update Profile</DialogTitle> */}
+                    <DialogTitle>Join</DialogTitle>
+                    <DialogDescription>Fill the info to join</DialogDescription>
                 </DialogHeader>
-                <UpdateProfileForm modalControl={setOpen} />
+                <Stripe registerData={registerData} modalControl={setOpen} />
                 <DialogFooter className="sm:justify-start">
                     <DialogClose asChild>
                         <Button type="button" variant="secondary">
@@ -34,4 +42,4 @@ function UpdateProfileModal() {
     );
 }
 
-export default UpdateProfileModal;
+export default CheckoutModal;

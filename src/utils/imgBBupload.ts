@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function imgBBupload(img) {
+export function imgBBupload(img: string) {
     const body = new FormData();
     body.set("key", `${import.meta.env.VITE_IMGBB_API_KEY}`);
     body.append("image", img);

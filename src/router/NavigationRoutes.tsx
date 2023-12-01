@@ -2,7 +2,6 @@ type route = {
     name: string;
     route: string;
 };
-
 export const routes: route[] = [
     {
         name: "Home",
@@ -11,6 +10,10 @@ export const routes: route[] = [
     {
         name: "Available Camps",
         route: "/available-camps",
+    },
+    {
+        name: "Dashboard",
+        route: "/dashboard",
     },
     {
         name: "Contact",

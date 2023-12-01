@@ -1,27 +1,30 @@
 import { useState } from "react";
-import UpdateProfileForm from "./UpdateProfileForm";
+import FeedbackForm from "./FeedbackForm";
 import { Button } from "./ui/button";
 import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
+    DialogTitle,
     DialogTrigger,
 } from "./ui/dialog";
 
-function UpdateProfileModal() {
+function FeedbackModal({ campId }: { campId: string }) {
     const [open, setOpen] = useState(false);
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="default">Update Profile</Button>
+                <Button variant="default">Review</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md lg:max-w-screen-lg overflow-y-scroll max-h-screen">
+            <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    {/* <DialogTitle>Update Profile</DialogTitle> */}
+                    <DialogTitle>Feedback & Rating</DialogTitle>
+                    <DialogDescription></DialogDescription>
                 </DialogHeader>
-                <UpdateProfileForm modalControl={setOpen} />
+                <FeedbackForm modalControl={setOpen} campId={campId} />
                 <DialogFooter className="sm:justify-start">
                     <DialogClose asChild>
                         <Button type="button" variant="secondary">
@@ -34,4 +37,4 @@ function UpdateProfileModal() {
     );
 }
 
-export default UpdateProfileModal;
+export default FeedbackModal;

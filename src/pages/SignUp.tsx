@@ -11,30 +11,29 @@ import {
 } from "@/components/ui/select";
 import { useAxios } from "@/hooks/useAxios";
 import { AuthContext } from "@/providers/AuthProvider";
-import { Doctor, Organizer, Participant } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 
-type Participant_input = Omit<
-    Participant,
-    "_id" | "attended_camps" | "registered_camps"
-> & { password: string };
-type Doctor_input = Omit<
-    Doctor,
-    "_id" | "interested_camps" | "accepted_camps"
-> & { password: string };
-type Organizer_input = Omit<
-    Organizer,
-    "_id" | "organized_camps" | "feedbacks"
-> & { password: string };
-type Inputs = Organizer_input & Doctor_input & Participant_input;
-type registerUser =
-    | Omit<Organizer_input, "password">
-    | Omit<Doctor_input, "password">
-    | Omit<Participant_input, "password">;
+// type Participant_input = Omit<
+//     Participant,
+//     "_id" | "attended_camps" | "registered_camps"
+// > & { password: string };
+// type Doctor_input = Omit<
+//     Doctor,
+//     "_id" | "interested_camps" | "accepted_camps"
+// > & { password: string };
+// type Organizer_input = Omit<
+//     Organizer,
+//     "_id" | "organized_camps" | "feedbacks"
+// > & { password: string };
+// type Inputs = Organizer_input & Doctor_input & Participant_input;
+// type registerUser =
+//     | Omit<Organizer_input, "password">
+//     | Omit<Doctor_input, "password">
+//     | Omit<Participant_input, "password">;
 
 function SignUp() {
     // Set the title
@@ -52,21 +51,21 @@ function SignUp() {
         watch,
         formState: { errors, isSubmitting },
         reset,
-    } = useForm<Inputs>();
+    } = useForm<any>();
 
     const navigate = useNavigate();
-    const locationState = useLocation();
+    const locationState = useLocation().state;
     const axios = useAxios();
 
     const userMutation = useMutation({
-        mutationFn: (payload: registerUser) =>
+        mutationFn: (payload: any) =>
             axios
                 .post("/user", payload)
                 .then((res) => console.log(`Post query response ${res}`)),
     });
 
-    const submitHandler = async (data: Inputs) => {
-        let registeringUser: registerUser;
+    const submitHandler = async (data: any) => {
+        let registeringUser: any;
         if (data.role === "organizer") {
             registeringUser = {
                 role: data.role,
@@ -107,7 +106,7 @@ function SignUp() {
                 })
                 .then(() => {
                     console.log("User profile created successfully");
-                    navigate(locationState ? locationState : "/");
+                    navigate(locationState ? locationState : "/dashboard");
                 })
                 .catch((error) => {
                     console.error(error);
@@ -170,7 +169,7 @@ function SignUp() {
                             />
                             {errors.role && (
                                 <span className="text-destructive">
-                                    {errors.role.message}
+                                    {errors.role.message as string}
                                 </span>
                             )}
                         </div>
@@ -194,7 +193,7 @@ function SignUp() {
                             />
                             {errors.name && (
                                 <span className="text-destructive">
-                                    {errors.name.message}
+                                    {errors.name.message as string}
                                 </span>
                             )}
                         </div>
@@ -219,7 +218,7 @@ function SignUp() {
                             />
                             {errors.email && (
                                 <span className="text-destructive">
-                                    {errors.email.message}
+                                    {errors.email.message as string}
                                 </span>
                             )}
                         </div>
@@ -257,7 +256,7 @@ function SignUp() {
                             />
                             {errors.password && (
                                 <span className="text-destructive">
-                                    {errors.password.message}
+                                    {errors.password.message as string}
                                 </span>
                             )}
                         </div>
@@ -286,7 +285,7 @@ function SignUp() {
                             />
                             {errors.phone_number && (
                                 <span className="text-destructive">
-                                    {errors.phone_number.message}
+                                    {errors.phone_number.message as string}
                                 </span>
                             )}
                         </div>
@@ -321,7 +320,7 @@ function SignUp() {
                                     />
                                     {errors.age && (
                                         <span className="text-destructive">
-                                            {errors.age.message}
+                                            {errors.age.message as string}
                                         </span>
                                     )}
                                 </div>
@@ -356,7 +355,7 @@ function SignUp() {
                                     />
                                     {errors.gender && (
                                         <span className="text-destructive">
-                                            {errors.gender.message}
+                                            {errors.gender.message as string}
                                         </span>
                                     )}
                                 </div>
@@ -380,7 +379,7 @@ function SignUp() {
                                     />
                                     {errors.address && (
                                         <span className="text-destructive">
-                                            {errors.address.message}
+                                            {errors.address.message as string}
                                         </span>
                                     )}
                                 </div>
@@ -409,7 +408,10 @@ function SignUp() {
                                     />
                                     {errors.speciality && (
                                         <span className="text-destructive">
-                                            {errors.speciality.message}
+                                            {
+                                                errors.speciality
+                                                    .message as string
+                                            }
                                         </span>
                                     )}
                                 </div>
@@ -434,7 +436,10 @@ function SignUp() {
                                     />
                                     {errors.certification && (
                                         <span className="text-destructive">
-                                            {errors.certification.message}
+                                            {
+                                                errors.certification
+                                                    .message as string
+                                            }
                                         </span>
                                     )}
                                 </div>

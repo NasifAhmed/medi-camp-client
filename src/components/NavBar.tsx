@@ -6,9 +6,14 @@ import { NavBarDropDown } from "./NavBarDropDown";
 import { ThemeButton } from "./ThemeButton";
 import { Button } from "./ui/button";
 // import { useAxios } from "../hooks/useAxios";
-import { routes } from "@/router/NavigationRoutes";
-import { useAxios } from "@/hooks/useAxios";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAxiosSecure } from "@/hooks/useAxiosSecure";
+import logo from "../assets/logo.png";
 
 const NavBar = () => {
     // [dropDownState, setDropDownState] = useState([]);
@@ -16,13 +21,12 @@ const NavBar = () => {
     const { user, logOut } = useContext(AuthContext);
     // const axios = useAxios(true);
     const navigate = useNavigate();
-    const axios = useAxios();
-    const axiosSecure = useAxiosSecure();
+    const axios = useAxiosSecure();
     const handleLogOut = () => {
         // const userEmail = user?.email;
         logOut()
             .then(() => {
-                axiosSecure.post("/delete-token");
+                axios.post("/delete-token");
             })
             //         .then((res) => {
             //             if (tokenState) {
@@ -53,45 +57,65 @@ const NavBar = () => {
                 onClick={() => navigate("/")}
             >
                 <Avatar className="mr-2">
-                    <AvatarImage src="https://i.ibb.co/NmRFDbN/logo.png" />
+                    <AvatarImage src={logo} />
                 </Avatar>
+                <h1 className="text-lg font-bold">Medi Camp</h1>
             </div>
             <div className="md:flex justify-between items-center gap-10 hidden text-xl font-semibold">
-                {routes.map((data, index) => (
-                    <div key={index}>
+                <NavLink to="/" className={"navbar transition-colors"}>
+                    Home
+                </NavLink>
+                {user && (
+                    <>
                         <NavLink
-                            to={data.route}
+                            to="/available-camps"
                             className={"navbar transition-colors"}
                         >
-                            {data.name}
+                            Available Camps
                         </NavLink>
-                    </div>
-                ))}
+                        <NavLink
+                            to="/dashboard"
+                            className={"navbar transition-colors"}
+                        >
+                            Dashboard
+                        </NavLink>
+                    </>
+                )}
+                <NavLink to="/contact" className={"navbar transition-colors"}>
+                    Contact Us
+                </NavLink>
             </div>
             <div className="flex flex-1 ml-auto justify-end items-center gap-1">
                 {user ? (
                     <div className="flex text-xs md:text-base items-center">
-                        <Avatar className="mr-2">
-                            <AvatarImage
-                                src={user.photoURL as string | undefined}
-                            />
-                            <AvatarFallback>
-                                <img
-                                    src="https://i.ibb.co/dWbbNfk/fallback.png"
-                                    alt=""
-                                />
-                            </AvatarFallback>
-                        </Avatar>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <Avatar className="mr-2">
+                                    <AvatarImage
+                                        src={
+                                            user.photoURL as string | undefined
+                                        }
+                                    />
+                                    <AvatarFallback>
+                                        <img
+                                            src="https://i.ibb.co/dWbbNfk/fallback.png"
+                                            alt=""
+                                        />
+                                    </AvatarFallback>
+                                </Avatar>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>
+                                    <Button onClick={handleLogOut}>
+                                        Log Out
+                                    </Button>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
                         <span className="mr-5 hidden md:block">
                             {user.displayName}
                         </span>
-                        <Button
-                            className="hidden md:block"
-                            onClick={handleLogOut}
-                        >
-                            Log Out
-                        </Button>
                     </div>
                 ) : (
                     <>

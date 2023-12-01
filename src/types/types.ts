@@ -67,3 +67,11 @@ export type RegisteredParticipant = {
     payment_status: boolean;
     confirmation_status: boolean;
 };
+
+export type Feedback = {
+    owner: string | User;
+    camp: string | Camp;
+    text: string;
+    img: string;
+    rating: number;
+};

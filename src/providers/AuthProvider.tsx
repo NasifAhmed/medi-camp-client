@@ -1,18 +1,18 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
 import {
     GoogleAuthProvider,
+    User,
+    UserCredential,
     createUserWithEmailAndPassword,
     getAuth,
     onAuthStateChanged,
     signInWithEmailAndPassword,
-    signOut,
     signInWithPopup,
+    signOut,
     updateProfile,
-    User,
-    UserCredential,
 } from "firebase/auth";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import app from "../config/firebase.config";
-import { useAxios } from "@/hooks/useAxios";
+import { userType } from "./UserProvider";
 // import { useAxios } from "../hooks/useAxios";
 
 // Types
@@ -47,7 +47,6 @@ const googleProvider = new GoogleAuthProvider();
 const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | (User & userType) | null>(null);
     const [loading, setLoading] = useState(true);
-    const axios = useAxios();
 
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(

@@ -1,18 +1,12 @@
-import {
-    ReactNode,
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-} from "react";
 import { useAxios } from "@/hooks/useAxios";
+import { ReactNode, createContext, useContext, useState } from "react";
 // import { useAxios } from "../hooks/useAxios";
 
 // Types
-import { Organizer, Participant, Doctor } from "@/types/types";
+import { Doctor, Organizer, Participant } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "./AuthProvider";
-type userType = Organizer | Participant | Doctor | null;
+export type userType = Organizer | Participant | Doctor | null;
 type userContextValues = {
     userFromDB: userType;
     loading: boolean;
@@ -34,13 +28,15 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     const userDBQuery = useQuery({
         queryKey: ["userFromDB", authContext.user?.email],
         queryFn: async () => {
-            const response = await axios.get<userType>(
+            const response = await axios.get<userType[]>(
                 `/user?email=${authContext.user?.email}`
             );
             setLoading(false);
             return response.data;
         },
-        enabled: !!authContext.user?.email,
+        enabled: !authContext.loading,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
     });
 
     return (

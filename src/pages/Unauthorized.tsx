@@ -10,12 +10,13 @@ import {
 import { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
-export default function NotFound() {
+export default function Unauthorized() {
     const setTitle: React.Dispatch<React.SetStateAction<string>> =
         useOutletContext();
     useEffect(() => {
-        setTitle("404 Not Found | Medi Camp");
+        setTitle("Participant Profile | Medi Camp");
     }, [setTitle]);
+
     const navigate = useNavigate();
     return (
         <AnimationWrapper>
@@ -24,10 +25,10 @@ export default function NotFound() {
                 <Card className="w-[420px]">
                     <CardHeader className="text-center">
                         <CardTitle className="lg:text-7xl text-4xl">
-                            404
+                            Access Denied
                         </CardTitle>
                         <CardDescription>
-                            The page you’re looking for doesn’t exist.
+                            You don't have permission to visit this page.
                         </CardDescription>
                     </CardHeader>
                     <CardFooter className="flex justify-center">

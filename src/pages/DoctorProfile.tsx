@@ -1,5 +1,6 @@
 import AnimationWrapper from "@/components/AnimationWrapper";
 import CampCardSmall from "@/components/CampCardSmall";
+import Spinner from "@/components/Spinner";
 import UpdateProfileModal from "@/components/UpdateProfileModal";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,27 +14,26 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useAxios } from "@/hooks/useAxios";
 import { UserContext } from "@/providers/UserProvider";
-import { Camp } from "@/types/types";
+import { Camp, User } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
-function OrganizerProfile() {
+function DoctorProfile() {
     const setTitle: React.Dispatch<React.SetStateAction<string>> =
         useOutletContext();
     useEffect(() => {
-        setTitle("Organizer Profile | Medi Camp");
+        setTitle("Doctor Profile | Medi Camp");
     }, [setTitle]);
+
     const axios = useAxios();
     const { userFromDB } = useContext(UserContext);
 
     const queryResponse = useQuery({
-        queryKey: ["camp", "organizer", "profile"],
-        queryFn: async (): Promise<Camp[] | null> => {
+        queryKey: ["user", "doctor", "profile"],
+        queryFn: async (): Promise<User[] | null> => {
             try {
-                const res = await axios.get(
-                    `/camp?created_by=${userFromDB?._id}`
-                );
+                const res = await axios.get(`/user?email=${userFromDB?.email}`);
                 return res.data;
             } catch (error) {
                 console.log(`Error while fetching camp data : ${error}`);
@@ -51,7 +51,7 @@ function OrganizerProfile() {
             <Card className="w-full h-full">
                 <CardHeader>
                     <CardTitle className="text-center text-2xl">
-                        Organizer Profile
+                        Doctor Profile
                     </CardTitle>
                     <CardDescription></CardDescription>
                 </CardHeader>
@@ -80,11 +80,15 @@ function OrganizerProfile() {
                                     </h2>
                                     <h2>
                                         <span className="font-semibold">
-                                            Successfully organized :{" "}
+                                            Certification :{" "}
                                         </span>
-                                        {queryResponse.data &&
-                                            queryResponse.data.length}{" "}
-                                        camps
+                                        {userFromDB.info.certification}
+                                    </h2>
+                                    <h2>
+                                        <span className="font-semibold">
+                                            Speciality :{" "}
+                                        </span>
+                                        {userFromDB.info.speciality}
                                     </h2>
                                 </div>
                                 <div className="flex flex-col gap-2">
@@ -99,22 +103,29 @@ function OrganizerProfile() {
                         )}
                     </div>
                     <Separator className="my-10" />
+
                     <CardTitle className="text-center text-xl mb-10">
-                        Organized Camps
+                        Accepted Camps
                     </CardTitle>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 place-items-center gap-3 lg:gap-0">
-                        {queryResponse.data &&
-                            queryResponse.data.map((data, index) => {
-                                return (
-                                    <>
-                                        <CampCardSmall
-                                            key={index}
-                                            campData={data}
-                                        />
-                                    </>
-                                );
-                            })}
-                    </div>
+                    {!queryResponse.data ? (
+                        <Spinner condition={queryResponse.isLoading} />
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 place-items-center gap-3 lg:gap-0">
+                                {queryResponse.data[0].info.accepted_camps &&
+                                    queryResponse.data[0].info.accepted_camps.map(
+                                        (data: Camp, index: number) => {
+                                            return (
+                                                <CampCardSmall
+                                                    key={index}
+                                                    campData={data}
+                                                />
+                                            );
+                                        }
+                                    )}
+                            </div>
+                        </>
+                    )}
                 </CardContent>
                 <CardFooter></CardFooter>
             </Card>
@@ -122,4 +133,4 @@ function OrganizerProfile() {
     );
 }
 
-export default OrganizerProfile;
+export default DoctorProfile;

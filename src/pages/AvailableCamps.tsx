@@ -1,11 +1,8 @@
-import { useAxios } from "@/hooks/useAxios";
-import { Camp } from "@/types/types";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import CampCard from "../components/CampCard";
-import { Input } from "@/components/ui/input";
+import AnimationWrapper from "@/components/AnimationWrapper";
+import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
@@ -13,11 +10,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { motion } from "framer-motion";
-import AnimationWrapper from "@/components/AnimationWrapper";
-import Spinner from "@/components/Spinner";
+import { useAxios } from "@/hooks/useAxios";
+import { Camp } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
+import AOS from "aos";
+import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import CampCard from "../components/CampCard";
+
+import "aos/dist/aos.css";
 
 function AvailableCamps() {
     // Set the title
@@ -25,13 +27,14 @@ function AvailableCamps() {
         useOutletContext();
     useEffect(() => {
         setTitle("Available Camps | Medi Camp");
+        AOS.init();
     }, [setTitle]);
 
     const axios = useAxios();
 
     const campResponse = useQuery({
-        queryKey: ["camp"],
-        queryFn: async (): Promise<Camp[] | null> => {
+        queryKey: ["camp", "available"],
+        queryFn: async (): Promise<any | null> => {
             try {
                 const res = await axios.get("/camp");
                 setData(res.data);
@@ -46,7 +49,7 @@ function AvailableCamps() {
     const [data, setData] = useState(campResponse.data);
 
     const searchHandler = (typedValue: string) => {
-        const newData = campResponse.data?.filter((d) =>
+        const newData = campResponse.data?.filter((d: Camp) =>
             d?.name.toLowerCase().includes(typedValue.toLowerCase())
         );
         setData(newData);
@@ -115,9 +118,10 @@ function AvailableCamps() {
             <Separator className="w-full mb-10" />
             <div className="camps-display flex flex-col justify-center items-center gap-5 md:mx-10 mx-1">
                 <Spinner condition={campResponse.isLoading} />
+
                 {data &&
-                    data.map((camp: Camp) => {
-                        return <CampCard campData={camp} />;
+                    data.map((camp: Camp, index: number) => {
+                        return <CampCard key={index} campData={camp} />;
                     })}
             </div>
         </AnimationWrapper>

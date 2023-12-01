@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc --skipLibCheck && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -22,9 +22,13 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.2.0",
     "@tanstack/react-query": "^5.8.7",
     "@tanstack/react-query-devtools": "^5.8.7",
     "@tanstack/react-table": "^8.10.7",
+    "@types/aos": "^3.0.7",
+    "aos": "^2.3.4",
     "axios": "^1.6.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -45,6 +49,7 @@
     "react-spinners": "^0.13.8",
     "sonner": "^1.2.3",
     "sort-by": "^1.2.0",
+    "swiper": "^11.0.5",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7"
   },

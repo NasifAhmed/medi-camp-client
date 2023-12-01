@@ -1,23 +1,20 @@
+import AnimationWrapper from "@/components/AnimationWrapper";
+import ConfirmRegistrationModal from "@/components/ConfirmRegistrationModal";
 import { Button } from "@/components/ui/button";
 import { useAxios } from "@/hooks/useAxios";
 import { Camp, RegisteredParticipant } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { DataTable } from "../components/DataTable";
 import { toast } from "sonner";
-import { useState } from "react";
-import UpdateCampModal from "@/components/updateCampModal";
-import ConfirmRegistrationModal from "@/components/ConfirmRegistrationModal";
-import AnimationWrapper from "@/components/AnimationWrapper";
+import { DataTable } from "../components/DataTable";
 
 function ManageRegisteredCamps() {
     const axios = useAxios();
     const queryClient = useQueryClient();
-    const [participantCount, setParticipantCount] = useState();
 
     const deleteMutation = useMutation({
-        mutationFn: async (id) => {
+        mutationFn: async (id: string) => {
             await axios
                 .delete(`/camp?_id=${id}`)
                 .then((res) => {
@@ -33,7 +30,7 @@ function ManageRegisteredCamps() {
     });
 
     const confirmMutation = useMutation({
-        mutationFn: async (payload) => {
+        mutationFn: async (payload: RegisteredParticipant) => {
             await axios
                 .post(`/registered?_id=${payload._id}`, payload)
                 .then((res) => {
@@ -104,7 +101,7 @@ function ManageRegisteredCamps() {
         {
             accessorKey: "registered_camp.date",
             header: "Date and Time",
-            cell: (info) => {
+            cell: (info: any) => {
                 return DateTime.fromISO(info.getValue()).toLocaleString(
                     DateTime.DATETIME_MED
                 );
@@ -142,8 +139,8 @@ function ManageRegisteredCamps() {
         },
         {
             accessorKey: "confirmation_status",
-            header: "Payment Status",
-            cell: (info) => {
+            header: "Confirmation Status",
+            cell: (info: any) => {
                 if (info.getValue()) {
                     return <Button disabled>Confirmed</Button>;
                 } else {

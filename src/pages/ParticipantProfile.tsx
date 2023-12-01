@@ -1,4 +1,7 @@
+import AnimationWrapper from "@/components/AnimationWrapper";
 import CampCardSmall from "@/components/CampCardSmall";
+import UpdateProfileModal from "@/components/UpdateProfileModal";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
@@ -7,24 +10,26 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useAxios } from "@/hooks/useAxios";
 import { UserContext } from "@/providers/UserProvider";
 import { Camp, RegisteredParticipant } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
-import { useContext, useDebugValue } from "react";
-import UpdateCampModal from "@/components/updateCampModal";
-import UpdateProfileModal from "@/components/UpdateProfileModal";
-import { useNavigate } from "react-router-dom";
-import AnimationWrapper from "@/components/AnimationWrapper";
+import { useContext, useEffect } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 function ParticipantProfile() {
+    const setTitle: React.Dispatch<React.SetStateAction<string>> =
+        useOutletContext();
+    useEffect(() => {
+        setTitle("Participant Profile | Medi Camp");
+    }, [setTitle]);
+
     const axios = useAxios();
-    const { userFromDB, loading } = useContext(UserContext);
+    const { userFromDB } = useContext(UserContext);
 
     const queryResponse = useQuery({
-        queryKey: ["camp"],
+        queryKey: ["registered", "participant", "profile"],
         queryFn: async (): Promise<RegisteredParticipant[] | null> => {
             try {
                 const res = await axios.get(
@@ -102,12 +107,13 @@ function ParticipantProfile() {
                             </CardTitle>
                             <div className="grid grid-cols-1 lg:grid-cols-2 place-items-center gap-3 ">
                                 {queryResponse.data &&
-                                    queryResponse.data.map((data) => {
+                                    queryResponse.data.map((data, index) => {
                                         return (
                                             <>
                                                 <CampCardSmall
+                                                    key={index}
                                                     campData={
-                                                        data.registered_camp
+                                                        data.registered_camp as Camp
                                                     }
                                                 />
                                             </>

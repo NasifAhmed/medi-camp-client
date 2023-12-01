@@ -1,34 +1,30 @@
 import { useAxios } from "@/hooks/useAxios";
 import { UserContext } from "@/providers/UserProvider";
-import { RegisteredParticipant } from "@/types/types";
+import { Camp, RegisteredParticipant } from "@/types/types";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 function JoinCampForm({
     modalControl,
-    campId,
+    campData,
 }: {
     modalControl: React.Dispatch<React.SetStateAction<boolean>>;
-    campId: string;
+    campData: Camp;
 }) {
     const { userFromDB } = useContext(UserContext);
 
     const {
         control,
         handleSubmit,
-        watch,
         formState: { errors, isSubmitting },
         reset,
     } = useForm<RegisteredParticipant>();
 
-    const navigate = useNavigate();
-    const locationState = useLocation();
     const axios = useAxios();
 
     // const currentParticipantQuery = useQuery({
@@ -41,7 +37,7 @@ function JoinCampForm({
     const queryClient = useQueryClient();
 
     const userMutation = useMutation({
-        mutationFn: (payload: RegisteredParticipant) =>
+        mutationFn: (payload: any) =>
             axios
                 .post("/registered", payload)
                 .then((res) => console.log(`Post query response ${res}`)),
@@ -58,7 +54,8 @@ function JoinCampForm({
             email: userFromDB?.email,
             emergency_phone_number: data.emergency_phone_number,
             requirments: data.requirments,
-            registered_camp: campId,
+            registered_camp: campData._id,
+            price: campData.fees,
             payment_status: false,
             confirmation_status: false,
         };

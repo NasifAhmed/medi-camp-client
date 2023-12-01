@@ -7,10 +7,13 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { routes } from "@/router/NavigationRoutes";
+import { AuthContext } from "@/providers/AuthProvider";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function NavBarDropDown() {
+    const { user } = useContext(AuthContext);
+
     const navigate = useNavigate();
     return (
         <DropdownMenu>
@@ -22,14 +25,26 @@ export function NavBarDropDown() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                {routes.map((data, index) => (
-                    <DropdownMenuItem
-                        onClick={() => navigate(data.route)}
-                        key={index}
-                    >
-                        {data.name}
-                    </DropdownMenuItem>
-                ))}
+                <DropdownMenuItem onClick={() => navigate("/")}>
+                    Home
+                </DropdownMenuItem>
+                {user && (
+                    <>
+                        <DropdownMenuItem
+                            onClick={() => navigate("/availlable-camps")}
+                        >
+                            Available Camps
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => navigate("/dashboard")}
+                        >
+                            Dashboard
+                        </DropdownMenuItem>
+                    </>
+                )}
+                <DropdownMenuItem onClick={() => navigate("/contact")}>
+                    Contact Us
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );

@@ -1,21 +1,20 @@
-import { Button } from "@/components/ui/button";
+import AnimationWrapper from "@/components/AnimationWrapper";
 import UpdateCampModal from "@/components/UpdateCampModal";
+import { Button } from "@/components/ui/button";
 import { useAxios } from "@/hooks/useAxios";
 import { Camp } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "../components/DataTable";
-import AnimationWrapper from "@/components/AnimationWrapper";
 
 function ManageCamps() {
     const axios = useAxios();
     const queryClient = useQueryClient();
 
     const deleteRegisteredMutation = useMutation({
-        mutationFn: async (id) => {
+        mutationFn: async (id: string) => {
             await axios
                 .delete(`/registered?registered_camp=${id}`)
                 .then((res) => {
@@ -34,7 +33,7 @@ function ManageCamps() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: async (id) => {
+        mutationFn: async (id: string) => {
             await axios
                 .delete(`/camp?_id=${id}`)
                 .then((res) => {
@@ -77,7 +76,7 @@ function ManageCamps() {
         {
             accessorKey: "date",
             header: "Date and Time",
-            cell: (info) => {
+            cell: (info: any) => {
                 return DateTime.fromISO(info.getValue()).toLocaleString(
                     DateTime.DATETIME_MED
                 );
@@ -105,7 +104,7 @@ function ManageCamps() {
         {
             accessorKey: "doctors",
             header: "Healthcare Professional in Attendence",
-            cell: (info) => {
+            cell: (info: any) => {
                 return info.getValue().length;
             },
         },

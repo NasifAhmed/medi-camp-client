@@ -15,7 +15,7 @@ import { Doctor, Organizer, Participant } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 
 type Participant_input = Omit<
@@ -74,7 +74,7 @@ function UpdateProfileForm({
     });
 
     const submitHandler = async (data: Inputs) => {
-        let registeringUser: registerUser;
+        let registeringUser: any;
         if (userFromDB?.role === "organizer") {
             registeringUser = {
                 role: userFromDB?.role,
@@ -91,7 +91,7 @@ function UpdateProfileForm({
                 speciality: data.speciality,
                 certification: data.certification,
             };
-        } else if (userFromDB?.role === "participant") {
+        } else {
             registeringUser = {
                 role: userFromDB?.role,
                 name: data.name,

@@ -9,7 +9,6 @@ import { useAxios } from "@/hooks/useAxios";
 import { UserContext } from "@/providers/UserProvider";
 import { Camp } from "@/types/types";
 import { imgBBupload } from "@/utils/imgBBupload";
-import { DevTool } from "@hookform/devtools";
 import { useMutation } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -56,10 +55,10 @@ function AddCamp() {
                         `ImageBB upload response ${JSON.stringify(res)}`
                     );
 
-                    const camp: Camp = {
+                    const camp: any = {
                         name: data.name,
                         fees: data.fees,
-                        created_by: userFromDB._id,
+                        created_by: userFromDB?._id,
                         img: res.data.data.url,
                         date: date.toISOString(),
                         venue: data.venue,
@@ -90,11 +89,9 @@ function AddCamp() {
         <AnimationWrapper>
             {" "}
             <div className="flex flex-col justify-center items-center gap-4 max-w-md mx-4 md:mx-auto">
-                <h1 className="text-2xl font-semibold tracking-tight">
-                    Sign Up
-                </h1>
+                <h1 className="text-2xl font-semibold tracking-tight">Add</h1>
                 <p className="text-sm text-muted-foreground">
-                    Enter your credentials below to register
+                    Enter camp information below
                 </p>
                 <div className="grid gap-6 w-full">
                     <form
@@ -140,9 +137,10 @@ function AddCamp() {
                                 }}
                                 render={({ field }) => (
                                     <Input
+                                        className="cursor-pointer"
                                         {...field}
-                                        value={field.value?.filename}
-                                        onChange={(event) => {
+                                        // value={field.value?.filename}
+                                        onChange={(event: any) => {
                                             field.onChange(
                                                 event.target.files[0]
                                             );

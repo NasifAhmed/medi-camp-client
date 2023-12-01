@@ -61,11 +61,11 @@ function UpdateCampForm({
     });
 
     const submitHandler = async (data: Camp) => {
-        const camp: Camp = {
+        const camp: any = {
             _id: campData._id,
             name: data.name,
             fees: data.fees,
-            created_by: userFromDB._id,
+            created_by: userFromDB?._id,
             img: campData.img,
             date: date.toISOString(),
             venue: data.venue,
