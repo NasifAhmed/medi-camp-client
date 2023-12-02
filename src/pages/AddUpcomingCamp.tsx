@@ -15,12 +15,12 @@ import { Controller, useForm } from "react-hook-form";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 
-function AddCamp() {
+function AddUpcomingCamp() {
     // Set the title
     const setTitle: React.Dispatch<React.SetStateAction<string>> =
         useOutletContext();
     useEffect(() => {
-        setTitle("Add Camp | Medi Camp");
+        setTitle("Add Upcoming Camp | Medi Camp");
     }, [setTitle]);
 
     const { userFromDB } = useContext(UserContext);
@@ -39,7 +39,7 @@ function AddCamp() {
     const campMutation = useMutation({
         mutationFn: async (payload: Camp) => {
             await axios
-                .post("/camp", payload)
+                .post("/upcomingcamp", payload)
                 .then((res) => {
                     console.log(`Camp post response ${res}`);
                 })
@@ -91,7 +91,7 @@ function AddCamp() {
             <div className="flex flex-col justify-center items-center gap-4 max-w-md mx-4 md:mx-auto">
                 <h1 className="text-2xl font-semibold tracking-tight">Add</h1>
                 <p className="text-sm text-muted-foreground">
-                    Enter camp information below
+                    Enter upcoming camp information below
                 </p>
                 <div className="grid gap-6 w-full">
                     <form
@@ -405,4 +405,4 @@ function AddCamp() {
     );
 }
 
-export default AddCamp;
+export default AddUpcomingCamp;

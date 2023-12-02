@@ -6,9 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { useAxios } from "@/hooks/useAxios";
 import { Camp } from "@/types/types";
-import { useQuery } from "@tanstack/react-query";
 import { DateTime } from "luxon";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -19,9 +17,9 @@ type prop = {
     campData: Camp;
 };
 
-type countData = {
-    count: string;
-};
+// type countData = {
+//     count: string;
+// };
 
 function CampCard({ campData }: prop) {
     const navigate = useNavigate();
@@ -30,30 +28,30 @@ function CampCard({ campData }: prop) {
         console.log(campData._id);
     }, []);
 
-    const axios = useAxios();
-    const particpantCountQuery = useQuery({
-        queryKey: ["available camps", "count", "participant", campData._id],
-        queryFn: async (): Promise<countData | null> => {
-            try {
-                const response = await axios.get(
-                    `/registered?registered_camp=${campData._id}&count=0`
-                );
-                console.log(`Getting camp data for`, campData._id);
+    // const axios = useAxios();
+    // const particpantCountQuery = useQuery({
+    //     queryKey: ["available camps", "count", "participant", campData._id],
+    //     queryFn: async (): Promise<countData | null> => {
+    //         try {
+    //             const response = await axios.get(
+    //                 `/registered?registered_camp=${campData._id}&count=0`
+    //             );
+    //             console.log(`Getting camp data for`, campData._id);
 
-                // const fees = response.data.reduce((accum, current) => {
-                //     if (current.payment_status) {
-                //         return accum + current;
-                //     }
-                // });
-                // return fees;
-                return response.data;
-            } catch (error) {
-                console.log(`Error getting registered data : ${error}`);
-                return null;
-            }
-        },
-        enabled: !!campData,
-    });
+    //             // const fees = response.data.reduce((accum, current) => {
+    //             //     if (current.payment_status) {
+    //             //         return accum + current;
+    //             //     }
+    //             // });
+    //             // return fees;
+    //             return response.data;
+    //         } catch (error) {
+    //             console.log(`Error getting registered data : ${error}`);
+    //             return null;
+    //         }
+    //     },
+    //     enabled: !!campData,
+    // });
 
     return (
         <AnimationWrapper>
@@ -98,7 +96,7 @@ function CampCard({ campData }: prop) {
                             <span className="font-bold text-foreground">
                                 Participant Count :{" "}
                             </span>
-                            {particpantCountQuery.data?.count}
+                            {campData?.participants?.length}
                         </h3>
                         <h3>
                             <span className="font-bold text-foreground">

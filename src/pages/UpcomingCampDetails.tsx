@@ -1,22 +1,22 @@
 import AnimationWrapper from "@/components/AnimationWrapper";
-import JoinCampModal from "@/components/JoinCampModal";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useAxios } from "@/hooks/useAxios";
 import { UserContext } from "@/providers/UserProvider";
-import { Camp, RegisteredParticipant } from "@/types/types";
-import { useQuery } from "@tanstack/react-query";
+import { UpcomingCamp } from "@/types/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { DateTime } from "luxon";
 import { useContext, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
-function CampDetails() {
+function UpcomingCampDetails() {
     // Set the title
     const setTitle: React.Dispatch<React.SetStateAction<string>> =
         useOutletContext();
     useEffect(() => {
-        setTitle("Camp Details | Medi Camp");
+        setTitle("Upcoming Camp Details | Medi Camp");
     }, [setTitle]);
 
     const { id } = useParams();
@@ -24,11 +24,20 @@ function CampDetails() {
 
     const { userFromDB } = useContext(UserContext);
 
+    const userDoctorMutation = useMutation({
+        mutationFn: (payload: any) =>
+            axios
+                .post("/user", payload)
+                .then((res) => console.log(`Post query response ${res}`)),
+    });
+
     const campQuery = useQuery({
-        queryKey: ["camp", id],
-        queryFn: async (): Promise<Camp[] | null> => {
+        queryKey: ["upcomingcamp", "details", id],
+        queryFn: async (): Promise<UpcomingCamp[] | null> => {
             try {
-                const response = await axios.get(`/camp?_id=${id}`);
+                const response = await axios.get(
+                    `/upcomingcamp?_id=${id}&populate=0`
+                );
                 return response.data;
             } catch (error) {
                 console.log(`Error getting camp data : ${error}`);
@@ -37,20 +46,20 @@ function CampDetails() {
         },
         enabled: !!id,
     });
-    const registeredQuery = useQuery({
-        queryKey: ["registeredParticipants", "count", id],
-        queryFn: async (): Promise<RegisteredParticipant[] | null> => {
-            try {
-                const response = await axios.get(
-                    `/registered?registered_camp=${id}`
-                );
-                return response.data;
-            } catch (error) {
-                console.log(`Error getting camp data : ${error}`);
-                return null;
-            }
-        },
-    });
+    // const registeredQuery = useQuery({
+    //     queryKey: ["registeredParticipants", "count", id],
+    //     queryFn: async (): Promise<UpcomingCamp[] | null> => {
+    //         try {
+    //             const response = await axios.get(
+    //                 `/registered?registered_camp=${id}`
+    //             );
+    //             return response.data;
+    //         } catch (error) {
+    //             console.log(`Error getting camp data : ${error}`);
+    //             return null;
+    //         }
+    //     },
+    // });
     // const registeredQueryByEmail = useQuery({
     //     queryKey: ["registeredParticipants", "count", id],
     //     queryFn: async (): Promise<RegisteredParticipant[] | null> => {
@@ -65,6 +74,45 @@ function CampDetails() {
     //         }
     //     },
     // });
+
+    const upcomingCampMutation = useMutation({
+        mutationFn: (payload: any) =>
+            axios
+                .post("/upcomingcamp", payload)
+                .then((res) => console.log(`Post query response ${res}`)),
+    });
+
+    const submitHandler = () => {
+        const upcomingCamp: any = {
+            ...campQuery.data?.[0],
+        };
+        if (userFromDB?.role === "doctor") {
+            upcomingCamp.doctors_interested.push(userFromDB._id);
+            const newDoctorData = {
+                ...userFromDB,
+            };
+            newDoctorData.info.interested_camps.push(campQuery.data?.[0]._id);
+            userDoctorMutation.mutate(newDoctorData);
+        } else {
+            upcomingCamp.participants_interested.push(userFromDB?._id);
+        }
+
+        toast.promise(
+            upcomingCampMutation
+                .mutateAsync(upcomingCamp)
+                .then(() => {
+                    console.log("Joined successfully");
+                })
+                .catch((error) => {
+                    console.error(error);
+                }),
+            {
+                loading: "Loading...",
+                success: `Joined successfully !`,
+                error: "Error : Could not join !",
+            }
+        );
+    };
 
     return (
         <>
@@ -99,9 +147,12 @@ function CampDetails() {
                             </h2>
                             <h2 className="text-lg">
                                 <span className="font-bold">
-                                    Participants :{" "}
+                                    Participants Interested :{" "}
                                 </span>
-                                {campQuery.data[0].participants?.length}
+                                {
+                                    campQuery.data[0].participants_interested
+                                        .length
+                                }
                             </h2>
                             <h2 className="text-lg">
                                 <span className="font-bold">Purpose : </span>
@@ -121,13 +172,14 @@ function CampDetails() {
                                     {campQuery.data[0].special_service}
                                 </h2>
                             )}
-                            {campQuery.data[0].doctors?.length && (
+                            {campQuery.data[0].doctors_interested?.length && (
                                 <>
                                     <h2 className="text-lg font-bold">
-                                        Attended Healthcare Professionals :
+                                        Interested Healthcare Professionals
+                                        Interested :
                                     </h2>
                                     <ol className="list-decimal ml-10">
-                                        {campQuery.data[0].doctors.map(
+                                        {campQuery.data[0].doctors_interested.map(
                                             (doctor: any, index: number) => {
                                                 return (
                                                     <li key={index}>
@@ -144,21 +196,26 @@ function CampDetails() {
                         <Separator className="w-full mt-10" />
                         <div className="flex justify-around mt-10">
                             {userFromDB?.role === "participant" &&
-                                registeredQuery.data &&
-                                registeredQuery.data[0] && (
+                            campQuery.data &&
+                            campQuery.data[0].participants_interested.includes(
+                                userFromDB._id
+                            ) ? (
+                                <>
+                                    <Button disabled>
+                                        {userFromDB?.role === "participant"
+                                            ? "Already Joined"
+                                            : "Already Added To Interest"}
+                                    </Button>
+                                </>
+                            ) : (
+                                !(userFromDB?.role === "organizer") && (
                                     <>
-                                        <Button disabled>Already Joined</Button>
+                                        <Button onClick={submitHandler}>
+                                            Show Interest
+                                        </Button>
                                     </>
-                                )}
-                            {userFromDB?.role === "participant" &&
-                                registeredQuery.data &&
-                                !registeredQuery.data[0] && (
-                                    <>
-                                        <JoinCampModal
-                                            campData={campQuery.data[0]}
-                                        />
-                                    </>
-                                )}
+                                )
+                            )}
                         </div>
                     </>
                 )}
@@ -167,4 +224,4 @@ function CampDetails() {
     );
 }
 
-export default CampDetails;
+export default UpcomingCampDetails;

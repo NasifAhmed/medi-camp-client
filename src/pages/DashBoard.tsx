@@ -14,6 +14,9 @@ import FeedbackTable from "./FeedbackTable";
 import ManageCamps from "./ManageCamps";
 import ManageRegisteredCamps from "./ManageRegisteredCamps";
 import RegisteredCamps from "./RegisteredCamps";
+import AddUpcomingCamp from "./AddUpcomingCamp";
+import ManageUpcomingCamps from "./ManageUpcomingCamps";
+import PaymentHistory from "./PaymentHistory";
 
 type countResult = {
     count: string;
@@ -140,14 +143,20 @@ function DashBoard() {
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     {userFromDB && userFromDB.role === "organizer" && (
                         <>
+                            <TabsTrigger value="add-a-camp">
+                                Add A Camp
+                            </TabsTrigger>
+                            <TabsTrigger value="add-upcoming-camp">
+                                Add Upcoming Camp
+                            </TabsTrigger>
                             <TabsTrigger value="manage">
                                 Manage Camps
                             </TabsTrigger>
                             <TabsTrigger value="manage_registered">
                                 Manage Registered Camps
                             </TabsTrigger>
-                            <TabsTrigger value="add-a-camp">
-                                Add A Camp
+                            <TabsTrigger value="manage-upcoming-camp">
+                                Manage Upcoming Camps
                             </TabsTrigger>
                         </>
                     )}
@@ -158,6 +167,9 @@ function DashBoard() {
                             </TabsTrigger>
                             <TabsTrigger value="feedback">
                                 Feedback and Ratings
+                            </TabsTrigger>
+                            <TabsTrigger value="payment_history">
+                                Payment History
                             </TabsTrigger>
                         </>
                     )}
@@ -334,8 +346,17 @@ function DashBoard() {
                 <TabsContent value="add-a-camp">
                     <AddCamp />
                 </TabsContent>
+                <TabsContent value="add-upcoming-camp">
+                    <AddUpcomingCamp />
+                </TabsContent>
                 <TabsContent value="feedback">
                     <FeedbackTable />
+                </TabsContent>
+                <TabsContent value="manage-upcoming-camp">
+                    <ManageUpcomingCamps />
+                </TabsContent>
+                <TabsContent value="payment_history">
+                    <PaymentHistory />
                 </TabsContent>
             </Tabs>
         </AnimationWrapper>

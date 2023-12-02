@@ -1,23 +1,23 @@
 import AnimationWrapper from "@/components/AnimationWrapper";
 import ConfirmRegistrationModal from "@/components/ConfirmRegistrationModal";
+import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useAxios } from "@/hooks/useAxios";
-import { Camp, RegisteredParticipant } from "@/types/types";
+import { Camp, UpcomingCamp } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { toast } from "sonner";
 import { DataTable } from "../components/DataTable";
-import Spinner from "@/components/Spinner";
 
-function ManageRegisteredCamps() {
+function ManageUpcomingCamps() {
     const axios = useAxios();
     const queryClient = useQueryClient();
 
     const deleteMutation = useMutation({
         mutationFn: async (id: string) => {
             await axios
-                .delete(`/camp?_id=${id}`)
+                .delete(`/upcomingcamp?_id=${id}`)
                 .then((res) => {
                     console.log(`Camp delete response`, res);
                 })
@@ -25,15 +25,15 @@ function ManageRegisteredCamps() {
         },
         onSettled: () => {
             queryClient.invalidateQueries({
-                queryKey: ["all camps", "manage", "registered"],
+                queryKey: ["all upcoming camps", "manage"],
             });
         },
     });
 
     const confirmMutation = useMutation({
-        mutationFn: async (payload: RegisteredParticipant) => {
+        mutationFn: async (payload: any) => {
             await axios
-                .post(`/registered?_id=${payload._id}`, payload)
+                .post(`/camp`, payload)
                 .then((res) => {
                     console.log(`Registered update response`, res);
                 })
@@ -41,16 +41,16 @@ function ManageRegisteredCamps() {
         },
         onSettled: () => {
             queryClient.invalidateQueries({
-                queryKey: ["all camps", "manage", "registered"],
+                queryKey: ["all upcoming camps", "manage"],
             });
         },
     });
 
     const queryResponse = useQuery({
-        queryKey: ["all camps", "manage", "registered"],
-        queryFn: async (): Promise<Camp[] | null> => {
+        queryKey: ["all upcoming camps", "manage"],
+        queryFn: async (): Promise<UpcomingCamp[] | null> => {
             try {
-                const res = await axios.get("/registered");
+                const res = await axios.get("/upcomingcamp?populate=0");
                 return res.data;
             } catch (error) {
                 console.log(`Error while fetching camp data : ${error}`);
@@ -58,6 +58,26 @@ function ManageRegisteredCamps() {
             }
         },
     });
+
+    const userDoctorMutation = useMutation({
+        mutationFn: (payload: any) =>
+            axios
+                .post("/user", payload)
+                .then((res) => console.log(`Post query response ${res}`)),
+    });
+
+    // const queryResponse = useQuery({
+    //     queryKey: ["all upcoming camps", "manage"],
+    //     queryFn: async (): Promise<UpcomingCamp[] | null> => {
+    //         try {
+    //             const res = await axios.get("/upcomingcamp?populate=0");
+    //             return res.data;
+    //         } catch (error) {
+    //             console.log(`Error while fetching camp data : ${error}`);
+    //             return null;
+    //         }
+    //     },
+    // });
 
     const deleteHandler = (id: string) => {
         toast.promise(
@@ -70,22 +90,31 @@ function ManageRegisteredCamps() {
         );
     };
 
-    const confirmHandler = (oldData: RegisteredParticipant) => {
-        const updatedRegistered: RegisteredParticipant = {
+    const confirmHandler = (data: any) => {
+        const oldData = { ...data };
+        delete oldData._id;
+        const newCamp = {
             ...oldData,
-            // address: oldData.address,
-            // age: oldData.age,
-            // email: oldData.email,
-            // emergency_phone_number: oldData.emergency_phone_number,
-            // gender: oldData.gender,
-            // name: oldData.name,
-            // payment_status: oldData.payment_status,
-            // registered_camp: oldData.registered_camp,
-            // requirments: oldData.requirments,
-            confirmation_status: true,
+            doctors: [...oldData.doctors_interested],
+            participants: [...oldData.participants_interested],
         };
+
         toast.promise(
-            confirmMutation.mutateAsync(updatedRegistered).then(() => {}),
+            deleteMutation.mutateAsync(data._id).then(() => {
+                confirmMutation.mutateAsync(newCamp).then(() => {
+                    axios.get(`/camp?&name=${newCamp.name}`).then((res) => {
+                        newCamp.doctors.map((data: any) => {
+                            const newDoctorData: any = {
+                                ...data,
+                            };
+                            newDoctorData.info.interested_camps.push(
+                                res.data._id
+                            );
+                            userDoctorMutation.mutate(newDoctorData);
+                        });
+                    });
+                });
+            }),
             {
                 loading: "Updateing entry...",
                 success: `Entry updated !`,
@@ -96,11 +125,11 @@ function ManageRegisteredCamps() {
 
     const columns: ColumnDef<Camp>[] = [
         {
-            accessorKey: "registered_camp.name",
+            accessorKey: "name",
             header: "Camp Name",
         },
         {
-            accessorKey: "registered_camp.date",
+            accessorKey: "date",
             header: "Date and Time",
             cell: (info: any) => {
                 return DateTime.fromISO(info.getValue()).toLocaleString(
@@ -109,41 +138,39 @@ function ManageRegisteredCamps() {
             },
         },
         {
-            accessorKey: "registered_camp.venue",
+            accessorKey: "venue",
             header: "Venue",
         },
         {
-            accessorKey: "name",
-            header: "Registered by",
-        },
-        {
-            accessorKey: "email",
-            header: "Email",
-        },
-        {
-            accessorKey: "registered_camp.fees",
+            accessorKey: "fees",
             header: "Fees",
             cell: (info) => {
                 return `$${info.getValue()}`;
             },
         },
         {
-            accessorKey: "payment_status",
-            header: "Payment Status",
-            cell: (info) => {
-                if (info.getValue()) {
-                    return <span>Paid</span>;
-                } else {
-                    return <span>Unpaid</span>;
-                }
+            accessorKey: "participants_interested",
+            header: "Interested Participants",
+            cell: (info: any) => {
+                return `${info.getValue().length}`;
             },
         },
         {
-            accessorKey: "confirmation_status",
-            header: "Confirmation Status",
+            accessorKey: "doctors_interested",
+            header: "Interested Healthcare Professionals",
             cell: (info: any) => {
-                if (info.getValue()) {
-                    return <Button disabled>Confirmed</Button>;
+                return `${info.getValue().length}`;
+            },
+        },
+        {
+            header: "Action",
+            cell: (info: any) => {
+                if (
+                    // info.cell.row.original.doctors?.length <= 3 ||
+                    // info.cell.row.original.participants?.length <= 10
+                    false
+                ) {
+                    return <Button disabled>Publish</Button>;
                 } else {
                     return (
                         <ConfirmRegistrationModal
@@ -197,4 +224,4 @@ function ManageRegisteredCamps() {
     );
 }
 
-export default ManageRegisteredCamps;
+export default ManageUpcomingCamps;

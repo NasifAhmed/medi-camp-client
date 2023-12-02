@@ -20,14 +20,12 @@ export type Camp = {
 
 export type UpcomingCamp = {
     doctors_interested: Array<string | Doctor>;
-    doctors_accepted: Array<string | Doctor>;
-    participants_registered: Array<string | Participant>;
-    participants_accepted: Array<string | Doctor>;
+    participants_interested: Array<string | Doctor>;
 } & Omit<Camp, "doctors" | "participants" | "feedbacks" | "rating">;
 
 export type User = {
     _id: string;
-    role: "organizer" | "participant" | "doctor";
+    role: "organizer" | "participant" | "doctor" | "admin";
     name: string;
     email: string;
     phone_number: string;
@@ -74,4 +72,11 @@ export type Feedback = {
     text: string;
     img: string;
     rating: number;
+};
+
+export type Payment = {
+    owner: string | User;
+    camp: string | Camp;
+    amount: number;
+    transaction_id: string;
 };

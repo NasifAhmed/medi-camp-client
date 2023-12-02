@@ -163,6 +163,11 @@ function SignUp() {
                                             <SelectItem value="doctor">
                                                 Healthcare Professional
                                             </SelectItem>
+                                            <SelectItem value="admin">
+                                                <span className="text-destructive">
+                                                    Admin
+                                                </span>
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 )}

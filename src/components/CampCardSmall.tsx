@@ -24,7 +24,7 @@ function CampCardSmall({ campData }: prop) {
     // }, []);
 
     return (
-        <Card data-aos="fade-up" className="max-w-lg w-full">
+        <Card data-aos="fade-up" className=" z-20 max-w-lg w-full">
             <CardHeader>
                 <CardTitle className="text-2xl">{campData.name}</CardTitle>
                 <CardDescription></CardDescription>

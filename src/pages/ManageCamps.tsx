@@ -8,6 +8,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { toast } from "sonner";
 import { DataTable } from "../components/DataTable";
+import Spinner from "@/components/Spinner";
 
 function ManageCamps() {
     const axios = useAxios();
@@ -41,6 +42,17 @@ function ManageCamps() {
                     deleteRegisteredMutation.mutate(id);
                 })
                 .catch((e) => console.log(`Camp delete error : ${e}`));
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["all camps", "manage"],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["all camps", "manage", "registered"],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["camps", "count"],
+            });
         },
     });
 
@@ -151,12 +163,17 @@ function ManageCamps() {
 
     return (
         <AnimationWrapper>
-            {" "}
-            {queryResponse.data && !queryResponse.isLoading && (
-                <div className="container mx-auto py-10">
-                    <DataTable columns={columns} data={queryResponse.data} />
-                </div>
-            )}
+            <>
+                <Spinner condition={queryResponse.isLoading} />{" "}
+                {queryResponse.data && !queryResponse.isLoading && (
+                    <div className="container mx-auto py-10">
+                        <DataTable
+                            columns={columns}
+                            data={queryResponse.data}
+                        />
+                    </div>
+                )}
+            </>
         </AnimationWrapper>
     );
 }

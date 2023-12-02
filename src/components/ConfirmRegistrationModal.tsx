@@ -25,12 +25,9 @@ function ConfirmRegistrationModal({
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        Do you want to comfirm the registration ?
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>Do you confirm ?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        confirm the registration.
+                        This action cannot be undone. This is permament{" "}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

@@ -60,8 +60,10 @@ function Footer() {
                     </div>
                 </div>
             </div>
-            <div className="pt-5 pb-6">
-                <h3 className="w-full text-center">COPYRIGHT</h3>
+            <div className="pt-20 pb-6">
+                <h3 className="w-full text-center">
+                    &copy; Copyright 2023 Medi Camp
+                </h3>
             </div>
         </div>
     );

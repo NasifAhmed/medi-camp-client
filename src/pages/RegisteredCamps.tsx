@@ -8,6 +8,7 @@ import { DataTable } from "../components/DataTable";
 import { toast } from "sonner";
 import AnimationWrapper from "@/components/AnimationWrapper";
 import CheckoutModal from "@/components/CheckoutModal";
+import Spinner from "@/components/Spinner";
 
 function RegisteredCamps() {
     const axios = useAxios();
@@ -24,6 +25,13 @@ function RegisteredCamps() {
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["registered camps"] });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    "dashboard",
+                    "registeredParticipants",
+                    "participant",
+                ],
+            });
         },
     });
 
@@ -127,12 +135,17 @@ function RegisteredCamps() {
 
     return (
         <AnimationWrapper>
-            {" "}
-            {queryResponse.data && !queryResponse.isLoading && (
-                <div className="container mx-auto py-10">
-                    <DataTable columns={columns} data={queryResponse.data} />
-                </div>
-            )}
+            <>
+                <Spinner condition={queryResponse.isLoading} />{" "}
+                {queryResponse.data && !queryResponse.isLoading && (
+                    <div className="container mx-auto py-10">
+                        <DataTable
+                            columns={columns}
+                            data={queryResponse.data}
+                        />
+                    </div>
+                )}
+            </>
         </AnimationWrapper>
     );
 }

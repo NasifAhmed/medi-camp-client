@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { DataTable } from "../components/DataTable";
+import Spinner from "@/components/Spinner";
 
 function FeedbackTable() {
     const axios = useAxios();
@@ -87,12 +88,17 @@ function FeedbackTable() {
 
     return (
         <AnimationWrapper>
-            {" "}
-            {queryResponse.data && !queryResponse.isLoading && (
-                <div className="container mx-auto py-10">
-                    <DataTable columns={columns} data={queryResponse.data} />
-                </div>
-            )}
+            <>
+                <Spinner condition={queryResponse.isLoading} />{" "}
+                {queryResponse.data && !queryResponse.isLoading && (
+                    <div className="container mx-auto py-10">
+                        <DataTable
+                            columns={columns}
+                            data={queryResponse.data}
+                        />
+                    </div>
+                )}
+            </>
         </AnimationWrapper>
     );
 }

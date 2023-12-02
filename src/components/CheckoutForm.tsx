@@ -1,12 +1,13 @@
 // import { useAxios } from "@/hooks/useAxios";
 import { useAxiosSecure } from "@/hooks/useAxiosSecure";
 import { AuthContext } from "@/providers/AuthProvider";
-import { RegisteredParticipant } from "@/types/types";
+import { Payment, RegisteredParticipant } from "@/types/types";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
+import { UserContext } from "@/providers/UserProvider";
 
 function CheckoutForm({
     registerData,
@@ -20,6 +21,7 @@ function CheckoutForm({
     const [error, setError] = useState("");
     const axios = useAxiosSecure();
     const queryClient = useQueryClient();
+    const { userFromDB } = useContext(UserContext);
 
     const [clientSecret, setClientSecret] = useState("");
 
@@ -41,15 +43,32 @@ function CheckoutForm({
     const paymentStatusMutation = useMutation({
         mutationFn: async (payload: RegisteredParticipant) => {
             await axios
-                .post(`/register?_id=${registerData._id}`, payload)
+                .post(`/registered?_id=${registerData._id}`, payload)
                 .then((res) => {
-                    console.log(`Payment post response ${res}`);
+                    console.log(`Payment post to strip response ${res}`);
                 })
-                .catch((e) => console.log(`Payment post error : ${e}`));
+                .catch((e) =>
+                    console.log(`Payment post to stripe error : ${e}`)
+                );
         },
         onSettled: () => {
             queryClient.invalidateQueries({
                 queryKey: ["registered camps"],
+            });
+        },
+    });
+    const paymentPostMutation = useMutation({
+        mutationFn: async (payload: Payment) => {
+            await axios
+                .post(`/payment`, payload)
+                .then((res) => {
+                    console.log(`Payment post to DB response ${res}`);
+                })
+                .catch((e) => console.log(`Payment post to DB error : ${e}`));
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["payment", "history"],
             });
         },
     });
@@ -97,10 +116,21 @@ function CheckoutForm({
             console.log("payment intent", paymentIntent);
             if (paymentIntent.status === "succeeded") {
                 console.log("Transaxtion id");
-                paymentStatusMutation.mutate({
-                    ...registerData,
-                    payment_status: true,
-                });
+                paymentStatusMutation
+                    .mutateAsync({
+                        ...registerData,
+                        payment_status: true,
+                    })
+                    .then(() => {
+                        if (userFromDB != null) {
+                            paymentPostMutation.mutate({
+                                owner: userFromDB._id,
+                                camp: registerData.registered_camp,
+                                amount: paymentIntent.amount,
+                                transaction_id: paymentIntent.id,
+                            });
+                        }
+                    });
                 toast.success("Payment success !");
                 modalControl(false);
             }

@@ -16,6 +16,9 @@ import NotFound from "@/pages/NotFound";
 import PrivateRoute from "./PrivateRoute";
 import DoctorProfile from "@/pages/DoctorProfile";
 import Unauthorized from "@/pages/Unauthorized";
+import AddUpcomingCamp from "@/pages/AddUpcomingCamp";
+import UpcomingCampDetails from "@/pages/UpcomingCampDetails";
+import ManageUpcomingCamps from "@/pages/ManageUpcomingCamps";
 
 const Router = createBrowserRouter([
     {
@@ -48,6 +51,10 @@ const Router = createBrowserRouter([
                 element: <CampDetails />,
             },
             {
+                path: "/upcoming-camp-details/:id",
+                element: <UpcomingCampDetails />,
+            },
+            {
                 path: "/contact",
                 element: <Contact />,
             },
@@ -56,6 +63,14 @@ const Router = createBrowserRouter([
                 element: (
                     <PrivateRoute>
                         <AddCamp />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "/add-upcoming-camp",
+                element: (
+                    <PrivateRoute>
+                        <AddUpcomingCamp />
                     </PrivateRoute>
                 ),
             },
@@ -72,6 +87,14 @@ const Router = createBrowserRouter([
                 element: (
                     <PrivateRoute>
                         <ManageCamps />{" "}
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "/manage-upcoming-camps",
+                element: (
+                    <PrivateRoute>
+                        <ManageUpcomingCamps />
                     </PrivateRoute>
                 ),
             },

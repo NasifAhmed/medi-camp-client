@@ -105,6 +105,7 @@ function OrganizerProfile() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 place-items-center gap-3 lg:gap-0">
                         {queryResponse.data &&
                             queryResponse.data.map((data, index) => {
+                                console.log(`Data :`, data);
                                 return (
                                     <>
                                         <CampCardSmall
