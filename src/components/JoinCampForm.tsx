@@ -47,17 +47,17 @@ function JoinCampForm({
             });
         },
     });
-    // const userInCampMutation = useMutation({
-    //     mutationFn: (payload: any) =>
-    //         axios
-    //             .post("/camp", payload)
-    //             .then((res) => console.log(`Post query response ${res}`)),
-    //     onSettled: () => {
-    //         queryClient.invalidateQueries({
-    //             queryKey: ["camp"],
-    //         });
-    //     },
-    // });
+    const userInCampMutation = useMutation({
+        mutationFn: (payload: any) =>
+            axios
+                .post("/camp", payload)
+                .then((res) => console.log(`Post query response ${res}`)),
+        onSettled: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["camp"],
+            });
+        },
+    });
 
     const submitHandler = async (data: RegisteredParticipant) => {
         const registeredUser = {
@@ -70,17 +70,17 @@ function JoinCampForm({
             payment_status: false,
             confirmation_status: false,
         };
-        // const registeredUserInCamp: any = {
-        //     ...campData,
-        // };
-        // registeredUserInCamp.participants.push(userFromDB?._id);
+        const registeredUserInCamp: any = {
+            ...campData,
+        };
+        registeredUserInCamp.participants.push(userFromDB?._id);
 
         toast.promise(
             userMutation
                 .mutateAsync(registeredUser)
                 .then(() => {
                     console.log("Joined successfully");
-                    // userInCampMutation.mutateAsync(registeredUserInCamp);
+                    userInCampMutation.mutateAsync(registeredUserInCamp);
                     modalControl(false);
                 })
                 .catch((error) => {

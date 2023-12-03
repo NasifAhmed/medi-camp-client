@@ -38,7 +38,8 @@ const PrivateRoute = ({ children }: { children: ReactNode }) => {
             location.pathname === "/participant-profile" ||
             location.pathname === "/add-a-camp" ||
             location.pathname === "/registered-camps" ||
-            location.pathname === "/manage-camps"
+            location.pathname === "/manage-camps" ||
+            location.pathname === "/manage-upcoming-camps"
         ) {
             return <Navigate to="/unauthorized" />;
         }
@@ -47,7 +48,8 @@ const PrivateRoute = ({ children }: { children: ReactNode }) => {
             location.pathname === "/organizer-profile" ||
             location.pathname === "/doctor-profile" ||
             location.pathname === "/add-a-camp" ||
-            location.pathname === "/manage-camps"
+            location.pathname === "/manage-camps" ||
+            location.pathname === "/manage-upcoming-camps"
         ) {
             return <Navigate to="/unauthorized" />;
         }
