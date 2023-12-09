@@ -1,4 +1,4 @@
-# Medi Camp
+# Medi Camp Client
 
 ## Live Site : [Here](https://medi-camp.web.app/)
 
