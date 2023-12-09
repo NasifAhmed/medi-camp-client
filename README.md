@@ -8,10 +8,15 @@
 - React
 - Tailwind
 - UI Library : Shadcn UI
-- NodeJS
-- ExpressJS
-- MongoDB with Mongoose
+- Authintication : Firebase
 
 ## Description
 
-This is a website for a The Medical Camp Management System
+This is the client side of the website for a The Medical Camp Management System. 
+Notable features of Medi Camp : 
+- Three types of users - Organizer, Participant, Healthcare Proffesionals
+- Organizers can add and arrange medicals camps
+- Participants can join the camps with payment.
+  - Stripe payment method is implemented
+- Healthcare professionals can show interest and join the camps
+- Curated dashboards for each types of users. 
