@@ -145,7 +145,6 @@ function ManageCamps() {
         },
         {
             id: "Delete",
-            header: "Action",
             cell: (info) => {
                 return (
                     <Button

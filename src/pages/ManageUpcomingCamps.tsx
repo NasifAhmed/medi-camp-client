@@ -183,7 +183,7 @@ function ManageUpcomingCamps() {
             },
         },
         {
-            header: "Action",
+            id: "cancel",
             cell: (info) => {
                 if (info.getValue()) {
                     return (
