@@ -9,6 +9,7 @@
 - Tailwind
 - UI Library : Shadcn UI
 - Authintication : Firebase
+- Payment Gatewat : Stripe
 
 ## Description
 
